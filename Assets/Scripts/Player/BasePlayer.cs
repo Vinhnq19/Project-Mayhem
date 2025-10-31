@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 using ProjectMayhem.Manager;
 
 namespace ProjectMayhem.Player
@@ -12,8 +13,25 @@ namespace ProjectMayhem.Player
         [Header("Player Settings")]
         [SerializeField] private int playerID = 1;
         [SerializeField] private float moveSpeed = 5f;
-        [SerializeField] private float jumpForce = 10f;
         [SerializeField] private LayerMask groundLayerMask = 1;
+
+        [Header("Jump Settings")]
+        [SerializeField] private float jumpForce = 10f;
+
+        [Header("Double Jump Settings")]
+        [SerializeField] private bool enableDoubleJump = true;
+        [SerializeField] private float doubleJumpForce = 10f;
+
+        [Header("Triple Jump Settings")]
+        [SerializeField] private bool enableTripleJump = false;  
+        [SerializeField] private float tripleJumpForce = 10f;
+
+        [Header("Platform Drop Settings")]
+        [SerializeField] private float dropDownTime = 0.5f;  
+
+        [Header("Movement Smoothing")]
+        [SerializeField] private float movementSmoothingDuration = 0.2f;
+        [SerializeField] private Ease movementEase = Ease.OutQuad;
 
         [Header("Component References")]
         [SerializeField] private PlayerCombat playerCombat;
@@ -28,7 +46,22 @@ namespace ProjectMayhem.Player
         // Movement state
         private Vector2 moveInput;
         private bool isGrounded;
-        private bool jumpPressed;
+        private bool wasGrounded;
+        private bool jumpPressedThisFrame;
+        private bool downPressedThisFrame;
+
+        // Jump state tracking
+        private int jumpCount = 0;  // 0 = on ground, 1 = first jump, 2 = double jump, 3 = triple jump
+        private bool canTripleJump = false;
+
+        // Platform drop state
+        private bool isDroppingDown = false;
+        private float dropDownTimer = 0f;
+        private Collider2D currentPlatformCollider = null;
+
+        // Horizontal movement smoothing
+        private float targetVelocityX = 0f;
+        private float velocityXSmoothing = 0f;
 
         // Properties
         public int PlayerID => playerID;
@@ -42,7 +75,10 @@ namespace ProjectMayhem.Player
         public PlayerStateMachine StateMachine => playerStateMachine;
         public bool IsGrounded => isGrounded;
         public Vector2 MoveInput => moveInput;
-        public bool JumpPressed => jumpPressed;
+        public bool CanDoubleJump => enableDoubleJump && (jumpCount == 1);
+        public bool CanTripleJump => enableTripleJump && (jumpCount == 2);
+        public int JumpCount => jumpCount;
+        public bool IsDroppingDown => isDroppingDown;
 
         private void Awake()
         {
@@ -68,12 +104,14 @@ namespace ProjectMayhem.Player
                     inputManager.OnPlayer1_Move += HandleMove;
                     inputManager.OnPlayer1_Jump += HandleJump;
                     inputManager.OnPlayer1_Shoot += HandleShoot;
+                    inputManager.OnPlayer1_Special += HandleSpecial;
                 }
                 else if (playerID == 2)
                 {
                     inputManager.OnPlayer2_Move += HandleMove;
                     inputManager.OnPlayer2_Jump += HandleJump;
                     inputManager.OnPlayer2_Shoot += HandleShoot;
+                    inputManager.OnPlayer2_Special += HandleSpecial;
                 }
             }
         }
@@ -87,12 +125,14 @@ namespace ProjectMayhem.Player
                     inputManager.OnPlayer1_Move -= HandleMove;
                     inputManager.OnPlayer1_Jump -= HandleJump;
                     inputManager.OnPlayer1_Shoot -= HandleShoot;
+                    inputManager.OnPlayer1_Special -= HandleSpecial;
                 }
                 else if (playerID == 2)
                 {
                     inputManager.OnPlayer2_Move -= HandleMove;
                     inputManager.OnPlayer2_Jump -= HandleJump;
                     inputManager.OnPlayer2_Shoot -= HandleShoot;
+                    inputManager.OnPlayer2_Special -= HandleSpecial;
                 }
             }
         }
@@ -104,67 +144,305 @@ namespace ProjectMayhem.Player
 
         private void Update()
         {
+            bool wasGroundedPrevious = wasGrounded;
             CheckGrounded();
+            wasGrounded = isGrounded;
+
+            if (!wasGroundedPrevious && isGrounded)
+            {
+                ResetJumpCount();
+            }
+
+            HandleDropDownTimer();
+
+            HandleMovementInput();
         }
 
         private void FixedUpdate()
         {
-            if (moveInput.magnitude > 0.1f)
+            if (Mathf.Abs(moveInput.x) > 0.1f)
             {
-                Move(moveInput);
+                Move(new Vector2(moveInput.x, 0f));
             }
+            else
+            {
+                StopMovement();
+            }
+
+            float newVelX = Mathf.SmoothDamp(rb.velocity.x, targetVelocityX, ref velocityXSmoothing, movementSmoothingDuration);
+            rb.velocity = new Vector2(newVelX, rb.velocity.y);
         }
 
         private void InitializePlayer()
         {
             rb.freezeRotation = true;
-            rb.gravityScale = 1f;
+            rb.gravityScale = 3f;  
 
-            Debug.Log($"[BasePlayer] Player {playerID} initialized");
+            jumpCount = 0;
+            canTripleJump = enableTripleJump;
+            wasGrounded = false;
+            isDroppingDown = false;
+            dropDownTimer = 0f;
+
+            Debug.Log($"[BasePlayer] Player {playerID} initialized - Double Jump: {enableDoubleJump}, Triple Jump: {enableTripleJump}");
         }
 
         public void HandleMove(Vector2 direction)
-        {
-            moveInput = direction;
-        }
+		{
+    		bool jumpPressed = direction.y > 0.1f;
+    		bool wasJumpPressed = moveInput.y > 0.1f; 
+    		jumpPressedThisFrame = jumpPressed && !wasJumpPressed;
+
+    		bool downPressed = direction.y < -0.1f && isGrounded;
+    		bool wasDownPressed = moveInput.y < -0.1f; 
+    		downPressedThisFrame = downPressed && !wasDownPressed;
+
+    		if (jumpPressedThisFrame)
+        		Debug.Log($"[BasePlayer] Player {playerID} jump input detected: {direction}");
+    		if (downPressedThisFrame)
+        		Debug.Log($"[BasePlayer] Player {playerID} drop down input detected: {direction}");
+
+    		moveInput = direction;
+		}
 
         public void HandleJump(bool isPressed)
         {
-            jumpPressed = isPressed;
-            
-            if (isPressed && isGrounded)
+            if (isPressed)
             {
-                Jump(jumpForce);
+                Vector2 currentMove = moveInput;
+                currentMove.y = 1f;  
+                HandleMove(currentMove);
             }
+        }
+
+        private void HandleMovementInput()
+        {
+            if (jumpPressedThisFrame)
+            {
+                Debug.Log($"[BasePlayer] Player {playerID} jump input - Grounded: {isGrounded}, JumpCount: {jumpCount}");
+
+                if (isGrounded && !isDroppingDown)
+                {
+                    Jump(jumpForce);
+                    jumpCount = 1;
+                    Debug.Log($"[BasePlayer] Player {playerID} normal jump executed");
+                }
+                else if (!isGrounded)
+                {
+                    if (enableDoubleJump && jumpCount == 1)
+                    {
+                        Jump(doubleJumpForce);
+                        jumpCount = 2;
+                        Debug.Log($"[BasePlayer] Player {playerID} double jump executed");
+                    }
+                    else if (enableTripleJump && jumpCount == 2)
+                    {
+                        Jump(tripleJumpForce);
+                        jumpCount = 3;
+                        Debug.Log($"[BasePlayer] Player {playerID} triple jump executed");
+                    }
+                    else
+                    {
+                        Debug.Log($"[BasePlayer] Player {playerID} no more jumps available - JumpCount: {jumpCount}, DoubleJump: {enableDoubleJump}, TripleJump: {enableTripleJump}");
+                    }
+                }
+                else
+                {
+                    Debug.Log($"[BasePlayer] Player {playerID} jump blocked - Grounded: {isGrounded}, DroppingDown: {isDroppingDown}");
+                }
+                jumpPressedThisFrame = false;
+            }
+
+            if (downPressedThisFrame)
+            {
+                Debug.Log($"[BasePlayer] Player {playerID} drop down input - Grounded: {isGrounded}");
+                if (isGrounded)
+                {
+                    StartDropDown();
+                    Debug.Log($"[BasePlayer] Player {playerID} drop down input executed");
+                }
+                else
+                {
+                    Debug.Log($"[BasePlayer] Player {playerID} drop down blocked - not grounded");
+                }
+                downPressedThisFrame = false;
+            }
+            
+        }
+
+        private void HandleDropDownTimer()
+        {
+            if (isDroppingDown)
+            {
+                dropDownTimer -= Time.deltaTime;
+                
+                if (dropDownTimer <= 0f)
+                {
+                    EndDropDown();
+                }
+            }
+        }
+
+        private void StartDropDown()
+        {
+            Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.2f);
+            Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
+            
+            RaycastHit2D boxHit = Physics2D.BoxCast(
+                boxCenter,
+                boxSize,
+                0f,
+                Vector2.down,
+                0.2f,
+                groundLayerMask
+            );
+
+            // If found a platform (any collider in ground layer)
+            if (boxHit.collider != null)
+            {
+                currentPlatformCollider = boxHit.collider;
+                // Ignore collision temporarily to allow drop down
+                Physics2D.IgnoreCollision(capsuleCollider, currentPlatformCollider, true);
+                isDroppingDown = true;
+                dropDownTimer = dropDownTime;
+
+                Debug.Log($"[BasePlayer] Player {playerID} dropping down through platform: {boxHit.collider.gameObject.name}");
+            }
+            else
+            {
+                // Fallback: Try Raycast if BoxCast didn't find anything
+                RaycastHit2D hit = Physics2D.Raycast(
+                    transform.position,
+                    Vector2.down,
+                    capsuleCollider.size.y / 2f + 0.1f,
+                    groundLayerMask
+                );
+
+                if (hit.collider != null)
+                {
+                    currentPlatformCollider = hit.collider;
+                    Physics2D.IgnoreCollision(capsuleCollider, currentPlatformCollider, true);
+                    isDroppingDown = true;
+                    dropDownTimer = dropDownTime;
+
+                    Debug.Log($"[BasePlayer] Player {playerID} dropping down through platform (raycast): {hit.collider.gameObject.name}");
+                }
+                else
+                {
+                    Debug.Log($"[BasePlayer] Player {playerID} no platform found for drop down");
+                }
+            }
+        }
+
+        private void EndDropDown()
+        {
+            if (currentPlatformCollider != null)
+            {
+                Physics2D.IgnoreCollision(capsuleCollider, currentPlatformCollider, false);
+                currentPlatformCollider = null;
+            }
+            isDroppingDown = false;
+            dropDownTimer = 0f;
         }
 
         public void HandleShoot()
         {
-            // This will be handled by weapon system
             Debug.Log($"[BasePlayer] Player {playerID} shoot input received");
         }
-
-        public virtual void Move(Vector2 velocity)
+        
+        public void HandleSpecial()
         {
-            Vector2 targetVelocity = new Vector2(velocity.x * moveSpeed, rb.velocity.y);
-            rb.velocity = targetVelocity;
+            Debug.Log($"[BasePlayer] Player {playerID} special input received");
+        }
+
+        public virtual void Move(Vector2 direction)
+        {
+            float targetX = direction.x * moveSpeed;
+            targetVelocityX = targetX;
+        }
+
+        private void StopMovement()
+        {
+            targetVelocityX = 0f;
         }
 
         public virtual void Jump(float force)
         {
-            if (isGrounded)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, force);
-                Debug.Log($"[BasePlayer] Player {playerID} jumped with force {force}");
-            }
+            rb.velocity = new Vector2(rb.velocity.x, force);
+            
+            Debug.Log($"[BasePlayer] Player {playerID} jumped with force {force}");
+        }
+
+
+        private void ResetJumpCount()
+        {
+            jumpCount = 0;
+            EndDropDown(); 
+        }
+
+        public void EnableTripleJump()
+        {
+            enableTripleJump = true;
+            Debug.Log($"[BasePlayer] Player {playerID} triple jump enabled");
+        }
+
+        public void DisableTripleJump()
+        {
+            enableTripleJump = false;
+            if (jumpCount >= 3)
+                jumpCount = 2;  
+            Debug.Log($"[BasePlayer] Player {playerID} triple jump disabled");
         }
 
         private void CheckGrounded()
         {
-            Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.1f);
-            Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
+            Vector2 rayStart = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
+            float rayDistance = 0.3f; 
             
-            isGrounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundLayerMask);
+            bool foundGround = false;
+            for (int i = -1; i <= 1; i++)
+            {
+                Vector2 multiRayStart = new Vector2(transform.position.x + i * capsuleCollider.size.x * 0.3f, transform.position.y - capsuleCollider.size.y / 2f);
+                RaycastHit2D hit = Physics2D.Raycast(multiRayStart, Vector2.down, rayDistance, groundLayerMask);
+                
+                if (hit.collider != null)
+                {
+                    foundGround = true;
+                    break;
+                }
+            }
+            
+            // Fallback to OverlapBox method
+            if (!foundGround)
+            {
+                Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.1f);
+                Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
+                foundGround = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundLayerMask);
+            }
+            
+            // Debug ground detection
+            bool wasGrounded = isGrounded;
+            isGrounded = foundGround;
+            
+            // Debug ground detection changes
+            if (wasGrounded != isGrounded)
+            {
+                Debug.Log($"[BasePlayer] Player {playerID} ground state changed: {wasGrounded} -> {isGrounded}");
+            }
+            
+            // Debug ground detection every few frames when not grounded
+            if (!isGrounded && Time.frameCount % 30 == 0)
+            {
+                Debug.Log($"[BasePlayer] Player {playerID} not grounded - RayDistance: {rayDistance}, LayerMask: {groundLayerMask.value}");
+                
+                // Try longer raycasts for debugging
+                for (int i = -1; i <= 1; i++)
+                {
+                    Vector2 multiRayStart = new Vector2(transform.position.x + i * capsuleCollider.size.x * 0.3f, transform.position.y - capsuleCollider.size.y / 2f);
+                    RaycastHit2D hit = Physics2D.Raycast(multiRayStart, Vector2.down, 2.0f, groundLayerMask);
+                    Debug.Log($"[BasePlayer] Debug raycast {i}: Hit: {hit.collider != null}, Distance: {(hit.collider != null ? hit.distance : -1)}");
+                }
+            }
         }
 
         public void SetPlayerID(int id)
@@ -189,9 +467,21 @@ namespace ProjectMayhem.Player
 
         public void ResetToSpawn(Vector3 spawnPosition)
         {
+            transform.DOKill();
             transform.position = spawnPosition;
             rb.velocity = Vector2.zero;
+            
+            ResetJumpCount();
+            jumpCount = 0;
+            canTripleJump = enableTripleJump;
+            EndDropDown();
+            
             Debug.Log($"[BasePlayer] Player {playerID} reset to spawn position");
+        }
+
+        private void OnDestroy()
+        {
+            transform.DOKill();
         }
     }
 }
