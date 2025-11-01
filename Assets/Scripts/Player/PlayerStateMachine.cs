@@ -77,6 +77,8 @@ namespace ProjectMayhem.Player
             currentState = newState;
             currentState.EnterState();
 
+            EventBus.Emit(GameEvent.PlayerChangeState, this);
+
             Debug.Log($"[PlayerStateMachine] Changed from {previousState?.GetType().Name} to {currentState.GetType().Name}");
         }
     }
@@ -169,6 +171,9 @@ namespace ProjectMayhem.Player
                 else
                     stateMachine.ChangeState(new IdleState(player, stateMachine));
             }
+
+            if (player.GetVelocity().y > 0)
+                stateMachine.ChangeState(new JumpState(player, stateMachine));
         }
     }
 
