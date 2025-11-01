@@ -42,16 +42,20 @@ namespace ProjectMayhem.Player
         private Rigidbody2D rb;
         private CapsuleCollider2D capsuleCollider;
         private InputManager inputManager;
+        
+        private ContactFilter2D platformFilter;
+        private List<Collider2D> overlappingPlatformsList = new List<Collider2D>();
 
         // Movement state
         private Vector2 moveInput;
         private bool isGrounded;
         private bool wasGrounded;
-        private bool jumpPressedThisFrame;
-        private bool downPressedThisFrame;
+
+        private bool jumpInputPressed = false;
+        private bool dropDownInputPressed = false;
 
         // Jump state tracking
-        private int jumpCount = 0;  // 0 = on ground, 1 = first jump, 2 = double jump, 3 = triple jump
+        private int jumpCount = 0;
         private bool canTripleJump = false;
 
         // Platform drop state
@@ -140,10 +144,16 @@ namespace ProjectMayhem.Player
         private void Start()
         {
             InitializePlayer();
+            
+            platformFilter = new ContactFilter2D();
+            platformFilter.SetLayerMask(groundLayerMask);
+            platformFilter.useTriggers = false;
         }
 
         private void Update()
         {
+            HandlePlatformCollision();
+            
             bool wasGroundedPrevious = wasGrounded;
             CheckGrounded();
             wasGrounded = isGrounded;
@@ -154,8 +164,13 @@ namespace ProjectMayhem.Player
             }
 
             HandleDropDownTimer();
+            HandleActionInput();
+        }
 
-            HandleMovementInput();
+        private void LateUpdate()
+        {
+            jumpInputPressed = false;
+            dropDownInputPressed = false;
         }
 
         private void FixedUpdate()
@@ -191,16 +206,17 @@ namespace ProjectMayhem.Player
 		{
     		bool jumpPressed = direction.y > 0.1f;
     		bool wasJumpPressed = moveInput.y > 0.1f; 
-    		jumpPressedThisFrame = jumpPressed && !wasJumpPressed;
+    		if (jumpPressed && !wasJumpPressed)
+            {
+                jumpInputPressed = true;
+            }
 
     		bool downPressed = direction.y < -0.1f && isGrounded;
     		bool wasDownPressed = moveInput.y < -0.1f; 
-    		downPressedThisFrame = downPressed && !wasDownPressed;
-
-    		if (jumpPressedThisFrame)
-        		Debug.Log($"[BasePlayer] Player {playerID} jump input detected: {direction}");
-    		if (downPressedThisFrame)
-        		Debug.Log($"[BasePlayer] Player {playerID} drop down input detected: {direction}");
+    		if (downPressed && !wasDownPressed)
+            {
+                dropDownInputPressed = true;
+            }
 
     		moveInput = direction;
 		}
@@ -209,18 +225,14 @@ namespace ProjectMayhem.Player
         {
             if (isPressed)
             {
-                Vector2 currentMove = moveInput;
-                currentMove.y = 1f;  
-                HandleMove(currentMove);
+                jumpInputPressed = true;
             }
         }
 
-        private void HandleMovementInput()
+        private void HandleActionInput()
         {
-            if (jumpPressedThisFrame)
+            if (jumpInputPressed)
             {
-                Debug.Log($"[BasePlayer] Player {playerID} jump input - Grounded: {isGrounded}, JumpCount: {jumpCount}");
-
                 if (isGrounded && !isDroppingDown)
                 {
                     Jump(jumpForce);
@@ -250,24 +262,20 @@ namespace ProjectMayhem.Player
                 {
                     Debug.Log($"[BasePlayer] Player {playerID} jump blocked - Grounded: {isGrounded}, DroppingDown: {isDroppingDown}");
                 }
-                jumpPressedThisFrame = false;
             }
 
-            if (downPressedThisFrame)
+            if (dropDownInputPressed)
             {
-                Debug.Log($"[BasePlayer] Player {playerID} drop down input - Grounded: {isGrounded}");
                 if (isGrounded)
                 {
                     StartDropDown();
-                    Debug.Log($"[BasePlayer] Player {playerID} drop down input executed");
+                    Debug.Log($"[BasePlayer] Player {playerID} drop down executed");
                 }
                 else
                 {
                     Debug.Log($"[BasePlayer] Player {playerID} drop down blocked - not grounded");
                 }
-                downPressedThisFrame = false;
             }
-            
         }
 
         private void HandleDropDownTimer()
@@ -297,11 +305,9 @@ namespace ProjectMayhem.Player
                 groundLayerMask
             );
 
-            // If found a platform (any collider in ground layer)
             if (boxHit.collider != null)
             {
                 currentPlatformCollider = boxHit.collider;
-                // Ignore collision temporarily to allow drop down
                 Physics2D.IgnoreCollision(capsuleCollider, currentPlatformCollider, true);
                 isDroppingDown = true;
                 dropDownTimer = dropDownTime;
@@ -310,7 +316,6 @@ namespace ProjectMayhem.Player
             }
             else
             {
-                // Fallback: Try Raycast if BoxCast didn't find anything
                 RaycastHit2D hit = Physics2D.Raycast(
                     transform.position,
                     Vector2.down,
@@ -345,6 +350,29 @@ namespace ProjectMayhem.Player
             dropDownTimer = 0f;
         }
 
+        private void HandlePlatformCollision()
+        {
+            if (isDroppingDown)
+            {
+                return;
+            }
+
+            int count = capsuleCollider.OverlapCollider(platformFilter, overlappingPlatformsList);
+
+            for(int i = 0; i < count; i++)
+            {
+                Collider2D platform = overlappingPlatformsList[i];
+
+                if (rb.velocity.y > 0.01f)
+                {
+                    Physics2D.IgnoreCollision(capsuleCollider, platform, true);
+                }
+                else 
+                {
+                    Physics2D.IgnoreCollision(capsuleCollider, platform, false);
+                }
+            }
+        }
         public void HandleShoot()
         {
             Debug.Log($"[BasePlayer] Player {playerID} shoot input received");
@@ -369,8 +397,6 @@ namespace ProjectMayhem.Player
         public virtual void Jump(float force)
         {
             rb.velocity = new Vector2(rb.velocity.x, force);
-            
-            Debug.Log($"[BasePlayer] Player {playerID} jumped with force {force}");
         }
 
 
@@ -396,6 +422,12 @@ namespace ProjectMayhem.Player
 
         private void CheckGrounded()
         {
+            if (isDroppingDown)
+            {
+                isGrounded = false;
+                return;
+            }
+            
             Vector2 rayStart = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
             float rayDistance = 0.3f; 
             
@@ -412,7 +444,6 @@ namespace ProjectMayhem.Player
                 }
             }
             
-            // Fallback to OverlapBox method
             if (!foundGround)
             {
                 Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.1f);
@@ -420,29 +451,8 @@ namespace ProjectMayhem.Player
                 foundGround = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundLayerMask);
             }
             
-            // Debug ground detection
             bool wasGrounded = isGrounded;
             isGrounded = foundGround;
-            
-            // Debug ground detection changes
-            if (wasGrounded != isGrounded)
-            {
-                Debug.Log($"[BasePlayer] Player {playerID} ground state changed: {wasGrounded} -> {isGrounded}");
-            }
-            
-            // Debug ground detection every few frames when not grounded
-            if (!isGrounded && Time.frameCount % 30 == 0)
-            {
-                Debug.Log($"[BasePlayer] Player {playerID} not grounded - RayDistance: {rayDistance}, LayerMask: {groundLayerMask.value}");
-                
-                // Try longer raycasts for debugging
-                for (int i = -1; i <= 1; i++)
-                {
-                    Vector2 multiRayStart = new Vector2(transform.position.x + i * capsuleCollider.size.x * 0.3f, transform.position.y - capsuleCollider.size.y / 2f);
-                    RaycastHit2D hit = Physics2D.Raycast(multiRayStart, Vector2.down, 2.0f, groundLayerMask);
-                    Debug.Log($"[BasePlayer] Debug raycast {i}: Hit: {hit.collider != null}, Distance: {(hit.collider != null ? hit.distance : -1)}");
-                }
-            }
         }
 
         public void SetPlayerID(int id)

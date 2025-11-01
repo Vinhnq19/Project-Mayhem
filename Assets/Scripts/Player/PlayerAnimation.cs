@@ -7,27 +7,38 @@ using UnityEngine.UIElements;
 
 public class PlayerAnimation : MonoBehaviour
 {
-
     private readonly string IS_RUNNING = "IsRunning";
     private readonly string IS_JUMPING = "IsJumping";
-
     private readonly string IS_FALLING = "IsFalling";
     private readonly string IS_LANDING = "IsLanding";
 
     private Animator anim;
+    private BasePlayer basePlayer; 
 
-    public SpriteRenderer Visual { get; private set; }
+    [Header("Component References")]
+    [SerializeField] private SpriteRenderer visualSpriteRenderer; 
 
-    // Start is called before the first frame update
+    private Action<PlayerStateMachine> changeAnimationAction; 
+
     void Start()
     {
         this.anim = this.GetComponent<Animator>();
-        this.Visual = this.GetComponent<SpriteRenderer>();
+        this.basePlayer = this.GetComponent<BasePlayer>();
 
-        EventBus.On(GameEvent.PlayerChangeState, (Action<PlayerStateMachine>)((stateMachine) =>
+        changeAnimationAction = (stateMachine) =>
         {
-            this.ChangeAnimation(stateMachine);
-        }));
+            if (stateMachine.Player.PlayerID == this.basePlayer.PlayerID)
+            {
+                this.ChangeAnimation(stateMachine);
+            }
+        };
+        
+        EventBus.On(GameEvent.PlayerChangeState, changeAnimationAction);
+    }
+
+    void Update()
+    {
+        HandleFlip();
     }
 
     private void ChangeAnimation(PlayerStateMachine stateMachine)
@@ -43,9 +54,24 @@ public class PlayerAnimation : MonoBehaviour
 
     void OnDestroy()
     {
-        EventBus.Off(GameEvent.PlayerChangeState, (Action<PlayerStateMachine>)((stateMachine) =>
+        if (changeAnimationAction != null)
         {
-            this.ChangeAnimation(stateMachine);
-        }));
+            EventBus.Off(GameEvent.PlayerChangeState, changeAnimationAction);
+        }
+    }
+    
+    private void HandleFlip()
+    {
+        if (basePlayer == null) return; 
+
+        float moveX = basePlayer.MoveInput.x;
+
+        if (Mathf.Abs(moveX) > 0.1f)
+        {
+            if (visualSpriteRenderer != null) 
+            {
+                visualSpriteRenderer.flipX = (moveX < 0);
+            }
+        }
     }
 }

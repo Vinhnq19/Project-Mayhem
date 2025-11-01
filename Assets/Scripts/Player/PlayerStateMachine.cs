@@ -3,7 +3,6 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Player
 {
-
     public abstract class BasePlayerState
     {
         protected BasePlayer player;
@@ -16,11 +15,8 @@ namespace ProjectMayhem.Player
         }
 
         public virtual void EnterState() { }
-
         public virtual void UpdateState() { }
-
         public virtual void FixedUpdateState() { }
-
         public virtual void ExitState() { }
     }
 
@@ -34,6 +30,11 @@ namespace ProjectMayhem.Player
         private RunState runState;
         private JumpState jumpState;
         private FallState fallState;
+
+        public IdleState IdleState => idleState;
+        public RunState RunState => runState;
+        public JumpState JumpState => jumpState;
+        public FallState FallState => fallState;
 
         public BasePlayerState CurrentState => currentState;
         public BasePlayerState PreviousState => previousState;
@@ -70,7 +71,7 @@ namespace ProjectMayhem.Player
 
         public void ChangeState(BasePlayerState newState)
         {
-            if (newState == null) return;
+            if (newState == null || newState == currentState) return;
 
             previousState = currentState;
             currentState?.ExitState();
@@ -99,13 +100,13 @@ namespace ProjectMayhem.Player
             if (!player.IsGrounded)
             {
                 if (player.GetVelocity().y > 0)
-                    stateMachine.ChangeState(new JumpState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.JumpState);
                 else
-                    stateMachine.ChangeState(new FallState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.FallState);
             }
             else if (Mathf.Abs(player.MoveInput.x) > 0.1f)
             {
-                stateMachine.ChangeState(new RunState(player, stateMachine));
+                stateMachine.ChangeState(stateMachine.RunState);
             }
         }
     }
@@ -124,13 +125,13 @@ namespace ProjectMayhem.Player
             if (!player.IsGrounded)
             {
                 if (player.GetVelocity().y > 0)
-                    stateMachine.ChangeState(new JumpState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.JumpState);
                 else
-                    stateMachine.ChangeState(new FallState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.FallState);
             }
             else if (Mathf.Abs(player.MoveInput.x) < 0.1f)
             {
-                stateMachine.ChangeState(new IdleState(player, stateMachine));
+                stateMachine.ChangeState(stateMachine.IdleState);
             }
         }
     }
@@ -148,7 +149,7 @@ namespace ProjectMayhem.Player
         {
             if (player.GetVelocity().y <= 0)
             {
-                stateMachine.ChangeState(new FallState(player, stateMachine));
+                stateMachine.ChangeState(stateMachine.FallState);
             }
         }
     }
@@ -167,16 +168,15 @@ namespace ProjectMayhem.Player
             if (player.IsGrounded)
             {
                 if (Mathf.Abs(player.MoveInput.x) > 0.1f)
-                    stateMachine.ChangeState(new RunState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.RunState);
                 else
-                    stateMachine.ChangeState(new IdleState(player, stateMachine));
+                    stateMachine.ChangeState(stateMachine.IdleState);
             }
 
             if (player.GetVelocity().y > 0)
-                stateMachine.ChangeState(new JumpState(player, stateMachine));
+                stateMachine.ChangeState(stateMachine.JumpState);
         }
     }
 
     #endregion
 }
-
