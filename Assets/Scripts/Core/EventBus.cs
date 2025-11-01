@@ -26,7 +26,7 @@ public static class EventBus
         if (listeners.ContainsKey(eventName))
         {
             listeners[eventName].Remove(callback);
-            if (listeners[eventName] == null)
+            if (listeners[eventName].Count == 0)
                 listeners.Remove(eventName);
         }
     }
