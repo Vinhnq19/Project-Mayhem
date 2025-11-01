@@ -43,6 +43,9 @@ public class PlayerAnimation : MonoBehaviour
 
     void OnDestroy()
     {
-        
+        EventBus.Off(GameEvent.PlayerChangeState, (Action<PlayerStateMachine>)((stateMachine) =>
+        {
+            this.ChangeAnimation(stateMachine);
+        }));
     }
 }

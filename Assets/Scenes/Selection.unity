@@ -952,10 +952,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e494fd3d5c23a7f438cd2e70786c3170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: 3
   firstPosition: {x: -60, y: -100}
-  offset: {x: 150, y: 150}
+  offset: {x: 60, y: -60}
   skins:
   - {fileID: 8053599256410982204, guid: 2dabc29728f1b1d4ba3aba6ce1b6bff5, type: 3}
+  - {fileID: -5614226861761135725, guid: c583e680ab266c44c98b6ce1dbcafe03, type: 3}
+  - {fileID: 8403000216044526616, guid: 698c496e3cfc36940bd24c2edc4cb14d, type: 3}
+  - {fileID: 6509068707876391625, guid: de4c64abd273a9f49ab5fe5cb6a31590, type: 3}
+  - {fileID: -3105137290152282094, guid: 59790ecbe62e423408d352a08bac5244, type: 3}
   skinSlotPrefab: {fileID: 5850154676175555842, guid: bcf405fe030e78c4d84ee5203dd11834, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

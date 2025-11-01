@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SkinSelector : MonoBehaviour
 {
+    [SerializeField] private int grid;
     [SerializeField] private Vector2 firstPosition;
     [SerializeField] private Vector2 offset;
 
@@ -39,7 +40,8 @@ public class SkinSelector : MonoBehaviour
         for (int i = 0; i < skins.Length; i++)
         {
             // Tính vị trí spawn
-            Vector2 pos = firstPosition + offset * i;
+
+            Vector2 pos = firstPosition + new Vector2(offset.x * (i % grid), offset.y * (i/ grid));
 
             // Tạo slot
             GameObject slot = Instantiate(skinSlotPrefab, transform);
