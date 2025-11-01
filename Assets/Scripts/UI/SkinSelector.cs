@@ -1,64 +1,64 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkinSelector : MonoBehaviour
 {
-    [SerializeField] private int grid;
+    [SerializeField] private int grid = 4;
     [SerializeField] private Vector2 firstPosition;
     [SerializeField] private Vector2 offset;
+    [SerializeField] private SpriteRenderer skinImage;   // nhân vật
 
-    [SerializeField] private Sprite[] skins;
-
-    [SerializeField] private GameObject skinSlotPrefab;
+    [SerializeField] private Color[] colors;             // danh sách màu để chọn
+    [SerializeField] private GameObject skinSlotPrefab;  // prefab chứa Image + Button
 
     private readonly List<GameObject> spawnedSlots = new();
 
-    // Start is called before the first frame update
- void Start()
+    void Start()
     {
-        SpawnSkinSlots();
+        SpawnColorSlots();
     }
 
-    private void SpawnSkinSlots()
+    private void SpawnColorSlots()
     {
-        if (skinSlotPrefab == null || skins == null || skins.Length == 0)
+        if (skinSlotPrefab == null || colors == null || colors.Length == 0)
         {
-            Debug.LogWarning("SkinSelector: Prefab or skins not assigned!");
+            Debug.LogWarning("SkinSelector: Prefab or colors not assigned!");
             return;
         }
 
-        // Xóa slot cũ nếu có
+        // Xóa slot cũ
         foreach (var slot in spawnedSlots)
-        {
-            if (slot != null)
-                Destroy(slot);
-        }
+            if (slot != null) Destroy(slot);
         spawnedSlots.Clear();
 
-        // Spawn từng skin
-        for (int i = 0; i < skins.Length; i++)
+        // Tạo slot cho từng màu
+        for (int i = 0; i < colors.Length; i++)
         {
-            // Tính vị trí spawn
-
-            Vector2 pos = firstPosition + new Vector2(offset.x * (i % grid), offset.y * (i/ grid));
-
-            // Tạo slot
+            Vector2 pos = firstPosition + new Vector2(offset.x * (i % grid), offset.y * (i / grid));
             GameObject slot = Instantiate(skinSlotPrefab, transform);
             slot.transform.localPosition = pos;
 
-            // Gán sprite cho slot (nếu có Image hoặc SpriteRenderer)
-            var sr = slot.GetComponent<SpriteRenderer>();
-            if (sr != null)
-                sr.sprite = skins[i];
-            else
+            // Đặt màu lên Image trong slot
+            var imgs = slot.GetComponentsInChildren<Image>(true);
+            if (imgs != null && imgs.Length > 0)
             {
-                var img = slot.GetComponent<UnityEngine.UI.Image>();
-                if (img != null)
-                    img.sprite = skins[i];
+                imgs[^1].color = colors[i];
+            }
+
+            int index = i;
+            var btn = slot.GetComponent<Button>();
+            if (btn != null)
+            {
+                btn.onClick.AddListener(() => OnColorSelected(index));
             }
 
             spawnedSlots.Add(slot);
         }
+    }
+
+    private void OnColorSelected(int index)
+    {
+        skinImage.color = colors[index];
     }
 }
