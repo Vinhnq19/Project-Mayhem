@@ -5,7 +5,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "ReverseEffect", menuName = "Project Mayhem/Effects/Reverse")]
+    [CreateAssetMenu(fileName = "ReverseEffect", menuName = "ProjectMayhem/Effects/Reverse")]
     public class ReverseEffect : BaseEffect
     {
         protected override void OnApply(BasePlayer player)

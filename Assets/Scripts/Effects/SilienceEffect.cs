@@ -3,7 +3,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "SilenceEffect", menuName = "Project Mayhem/Effects/Silence")]
+    [CreateAssetMenu(fileName = "SilenceEffect", menuName = "ProjectMayhem/Effects/Silence")]
     public class SilenceEffect : BaseEffect
     {
         protected override void OnApply(BasePlayer player)

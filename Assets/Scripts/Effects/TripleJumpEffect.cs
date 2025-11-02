@@ -3,7 +3,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "TripleJumpEffect", menuName = "Project Mayhem/Effects/Triple Jump")]
+    [CreateAssetMenu(fileName = "TripleJumpEffect", menuName = "ProjectMayhem/Effects/Triple Jump")]
     public class TripleJumpEffect : BaseEffect
     {
         protected override void OnApply(BasePlayer player)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ProjectMayhem.Projectiles;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ProjectMayhem/Weapon Data", fileName = "New Weapon - ")]
+[CreateAssetMenu(menuName = "ProjectMayhem/Weapon Data", fileName = "Weapon - ")]
 
 public class WeaponData : ScriptableObject
 {

@@ -2,6 +2,7 @@ using UnityEngine;
 using ProjectMayhem.Manager;
 using ProjectMayhem.Player;
 using ProjectMayhem.Weapons;
+using System;
 
 namespace ProjectMayhem.Player
 {
@@ -58,6 +59,17 @@ namespace ProjectMayhem.Player
         {
             currentDamagePercent = 0f;
             isInvulnerable = false;
+
+            // Initialize weapon holder to face right (default)
+            if (weaponHolder != null)
+            {
+                weaponHolder.localScale = Vector3.one;
+            }
+
+            if (startingWeapon != null)
+            {
+                EquipWeapon(startingWeapon);
+            }
         }
 
         private void Update()
@@ -71,12 +83,87 @@ namespace ProjectMayhem.Player
                 }
             }
 
+            // Flip weapon based on player facing direction
+            UpdateWeaponFlip();
+
             // // Decay damage over time
             // if (currentDamagePercent > 0f)
             // {
             //     currentDamagePercent -= damageDecayRate * Time.deltaTime;
             //     currentDamagePercent = Mathf.Max(0f, currentDamagePercent);
             // }
+        }
+
+        private void UpdateWeaponFlip()
+        {
+            if (weaponHolder == null || basePlayer == null) return;
+
+            // Get player's move input to determine facing direction (same as PlayerAnimation)
+            float moveX = basePlayer.MoveInput.x;
+            
+            // Only update facing when player has input
+            if (Mathf.Abs(moveX) > 0.1f)
+            {
+                // Flip weapon holder: scale.x = -1 when moving left (same logic as sprite.flipX)
+                float scaleX = (moveX < 0) ? -1f : 1f;
+                weaponHolder.localScale = new Vector3(scaleX, 1f, 1f);
+            }
+        }
+
+        public void EquipWeapon(BaseWeapon weaponPrefab)
+        {
+            if (currentWeapon != null)
+            {
+                Destroy(currentWeapon.gameObject);
+            }
+
+            if (weaponPrefab != null && weaponHolder != null)
+            {
+                currentWeapon = Instantiate(weaponPrefab, weaponHolder);
+                currentWeapon.transform.localPosition = Vector3.zero;
+                currentWeapon.SetOwner(basePlayer);
+
+                Debug.Log($"[PlayerCombat] Player {playerID} equipped {weaponPrefab.name}");
+
+                EventBus.Emit(GameEvent.WeaponChanged, basePlayer, currentWeapon);
+            }
+        }
+
+        public void EquipWeaponFromData(WeaponData weaponData)
+        {
+            if (weaponData == null) return;
+            BaseWeapon weaponPrefab = null;
+
+            switch (weaponData.weaponType)
+            {
+                case WeaponType.Gun:
+                    // Tạo GunWeapon prefab hoặc sử dụng prefab template
+                    weaponPrefab = Resources.Load<GunWeapon>("Weapons/GunWeaponTemplate");
+                    break;
+
+                case WeaponType.Bomb:
+                    weaponPrefab = Resources.Load<BombWeapon>("Weapons/BombWeaponTemplate");
+                    break;
+            }
+
+            if (weaponPrefab != null)
+            {
+                EquipWeapon(weaponPrefab);
+                // Load data vào weapon
+                currentWeapon.LoadFromWeaponData(weaponData);
+            }
+        }
+
+        public void UseCurrentWeapon()
+        {
+            if (currentWeapon != null && canShoot)
+            {
+                currentWeapon.Use();
+            }
+            else if (!canShoot)
+            {
+                Debug.Log($"[PlayerCombat] Player {playerID} is silenced!");
+            }
         }
 
         public void TakeDamage(float baseDamage, float baseKnockback, Vector2 knockbackDirection)

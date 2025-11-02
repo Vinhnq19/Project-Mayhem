@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812ce40b1c4042840a369a72f1a14136, type: 3}
+  m_Name: Weapon - Pistol
+  m_EditorClassIdentifier: 
+  weaponName: Pistol
+  weaponIcon: {fileID: 21300000, guid: ab04c10f6414c7547a9e64389f27e36b, type: 3}
+  weaponType: 0
+  baseDamage: 10
+  baseKnockback: 5
+  fireRate: 1
+  maxAmmo: 10
+  reloadTime: 2
+  infiniteAmmo: 0
+  projectilePrefab: {fileID: 8229862190085078507, guid: 39ffb6c7f4d6125479a0b54fcbf75763, type: 3}
+  projectileSpeed: 20
+  projectilesPerShot: 1
+  spreadAngle: 0
+  throwForce: 15
+  throwAngle: 45
+  explosionRadius: 5
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  emptySound: {fileID: 0}
+  impactEffectPrefab: {fileID: 0}
