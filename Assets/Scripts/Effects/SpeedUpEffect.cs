@@ -4,7 +4,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "SpeedUpEffect", menuName = "Project Mayhem/Effects/Speed Up")]
+    [CreateAssetMenu(fileName = "SpeedUpEffect", menuName = "ProjectMayhem/Effects/Speed Up")]
     public class SpeedUpEffect : BaseEffect
     {
         [Header("Speed Settings")]

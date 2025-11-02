@@ -28,15 +28,18 @@ public class GunWeapon : BaseWeapon
             firePoint = transform;
     }
 
-    protected override void LoadFromWeaponData()
+    public override void LoadFromWeaponData(WeaponData data)
     {
-        base.LoadFromWeaponData();
-        if (weaponData != null)
+        base.LoadFromWeaponData(data);
+
+        if (data != null)
         {
-            projectilePrefab = weaponData.projectilePrefab;
-            projectileSpeed = weaponData.projectileSpeed;
-            projectilesPerShot = weaponData.projectilesPerShot;
-            spreadAngle = weaponData.spreadAngle;
+            projectilePrefab = data.projectilePrefab;
+            projectileSpeed = data.projectileSpeed;
+            projectilesPerShot = data.projectilesPerShot;
+            spreadAngle = data.spreadAngle;
+
+            Debug.Log($"[GunWeapon] Loaded gun-specific data from {data.weaponName}");
         }
     }
 
@@ -92,7 +95,14 @@ public class GunWeapon : BaseWeapon
             return;
         }
 
-        Vector2 direction = firePoint.right;
+        // Calculate direction based on weapon holder's scale
+        // When weaponHolder.localScale.x = -1 (facing left), we need to flip direction
+        Transform holder = transform.parent;
+        float facingDirection = (holder != null && holder.localScale.x < 0) ? -1f : 1f;
+        
+        // Base direction from firePoint, adjusted for facing direction
+        Vector2 direction = firePoint.right * facingDirection;
+        
         if (spreadAngle > 0f)
         {
             float randomSpread = Random.Range(-spreadAngle, spreadAngle);

@@ -3,7 +3,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "SlowDownEffect", menuName = "Project Mayhem/Effects/Slow Down")]
+    [CreateAssetMenu(fileName = "SlowDownEffect", menuName = "ProjectMayhem/Effects/Slow Down")]
     public class SlowDownEffect : BaseEffect
     {
         [Header("Speed Settings")]

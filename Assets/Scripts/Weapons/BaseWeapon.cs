@@ -48,24 +48,40 @@ namespace ProjectMayhem.Weapons
 
         protected virtual void Start()
         {
-            currentAmmo = maxAmmo;
-            lastFireTime = 0f;
-            isReloading = false;
+            if (weaponData != null)
+            {
+                LoadFromWeaponData(weaponData);
+            }
+            else
+            {
+
+                currentAmmo = maxAmmo;
+                lastFireTime = 0f;
+                isReloading = false;
+            }
         }
 
         public abstract void Use();
 
-        protected virtual void LoadFromWeaponData()
+        public virtual void LoadFromWeaponData(WeaponData data)
         {
-            baseDamage = weaponData.baseDamage;
-            baseKnockback = weaponData.baseKnockback;
-            fireRate = weaponData.fireRate;
-            maxAmmo = weaponData.maxAmmo;
-            reloadTime = weaponData.reloadTime;
-            shootSound = weaponData.shootSound;
-            reloadSound = weaponData.reloadSound;
-            emptySound = weaponData.emptySound;
+            if (data == null) return;
+
+            weaponData = data;
+            baseDamage = data.baseDamage;
+            baseKnockback = data.baseKnockback;
+            fireRate = data.fireRate;
+            maxAmmo = data.maxAmmo;
+            reloadTime = data.reloadTime;
+            shootSound = data.shootSound;
+            reloadSound = data.reloadSound;
+            emptySound = data.emptySound;
+
             currentAmmo = maxAmmo;
+            lastFireTime = 0f;
+            isReloading = false;
+
+            Debug.Log($"[BaseWeapon] Loaded weapon data: {data.weaponName}");
         }
 
         public virtual void Reload()
@@ -122,7 +138,8 @@ namespace ProjectMayhem.Weapons
 
         public virtual string GetWeaponInfo()
         {
-            return $"{GetType().Name} - Ammo: {currentAmmo}/{maxAmmo}, Damage: {baseDamage}, Knockback: {baseKnockback}";
+            string name = weaponData != null ? weaponData.weaponName : GetType().Name;
+            return $"{name} - Ammo: {currentAmmo}/{maxAmmo}, Damage: {baseDamage}, Knockback: {baseKnockback}";
         }
         public void SetCurrentAmmo(int amount)
         {

@@ -24,11 +24,11 @@ namespace ProjectMayhem.Player
         [SerializeField] private float doubleJumpForce = 10f;
 
         [Header("Triple Jump Settings")]
-        [SerializeField] private bool enableTripleJump = false;  
+        [SerializeField] private bool enableTripleJump = false;
         [SerializeField] private float tripleJumpForce = 10f;
 
         [Header("Platform Drop Settings")]
-        [SerializeField] private float dropDownTime = 0.5f;  
+        [SerializeField] private float dropDownTime = 0.5f;
 
         [Header("Movement Smoothing")]
         [SerializeField] private float movementSmoothingDuration = 0.2f;
@@ -43,7 +43,7 @@ namespace ProjectMayhem.Player
         private Rigidbody2D rb;
         private CapsuleCollider2D capsuleCollider;
         private InputManager inputManager;
-        
+
         private ContactFilter2D platformFilter;
         private List<Collider2D> overlappingPlatformsList = new List<Collider2D>();
 
@@ -149,7 +149,7 @@ namespace ProjectMayhem.Player
         private void Start()
         {
             InitializePlayer();
-            
+
             platformFilter = new ContactFilter2D();
             platformFilter.SetLayerMask(groundLayerMask);
             platformFilter.useTriggers = false;
@@ -158,7 +158,7 @@ namespace ProjectMayhem.Player
         private void Update()
         {
             HandlePlatformCollision();
-            
+
             bool wasGroundedPrevious = wasGrounded;
             CheckGrounded();
             wasGrounded = isGrounded;
@@ -196,7 +196,7 @@ namespace ProjectMayhem.Player
         private void InitializePlayer()
         {
             rb.freezeRotation = true;
-            rb.gravityScale = 3f;  
+            rb.gravityScale = 3f;
 
             jumpCount = 0;
             canTripleJump = enableTripleJump;
@@ -208,23 +208,23 @@ namespace ProjectMayhem.Player
         }
 
         public void HandleMove(Vector2 direction)
-		{
-    		bool jumpPressed = direction.y > 0.1f;
-    		bool wasJumpPressed = moveInput.y > 0.1f; 
-    		if (jumpPressed && !wasJumpPressed)
+        {
+            bool jumpPressed = direction.y > 0.1f;
+            bool wasJumpPressed = moveInput.y > 0.1f;
+            if (jumpPressed && !wasJumpPressed)
             {
                 jumpInputPressed = true;
             }
 
-    		bool downPressed = direction.y < -0.1f && isGrounded;
-    		bool wasDownPressed = moveInput.y < -0.1f; 
-    		if (downPressed && !wasDownPressed)
+            bool downPressed = direction.y < -0.1f && isGrounded;
+            bool wasDownPressed = moveInput.y < -0.1f;
+            if (downPressed && !wasDownPressed)
             {
                 dropDownInputPressed = true;
             }
 
-    		moveInput = direction;
-		}
+            moveInput = direction;
+        }
 
         public void HandleJump(bool isPressed)
         {
@@ -288,7 +288,7 @@ namespace ProjectMayhem.Player
             if (isDroppingDown)
             {
                 dropDownTimer -= Time.deltaTime;
-                
+
                 if (dropDownTimer <= 0f)
                 {
                     EndDropDown();
@@ -300,7 +300,7 @@ namespace ProjectMayhem.Player
         {
             Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.2f);
             Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
-            
+
             RaycastHit2D boxHit = Physics2D.BoxCast(
                 boxCenter,
                 boxSize,
@@ -364,7 +364,7 @@ namespace ProjectMayhem.Player
 
             int count = capsuleCollider.OverlapCollider(platformFilter, overlappingPlatformsList);
 
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 Collider2D platform = overlappingPlatformsList[i];
 
@@ -372,7 +372,7 @@ namespace ProjectMayhem.Player
                 {
                     Physics2D.IgnoreCollision(capsuleCollider, platform, true);
                 }
-                else 
+                else
                 {
                     Physics2D.IgnoreCollision(capsuleCollider, platform, false);
                 }
@@ -380,9 +380,16 @@ namespace ProjectMayhem.Player
         }
         public void HandleShoot()
         {
-            Debug.Log($"[BasePlayer] Player {playerID} shoot input received");
+            if (playerCombat != null)
+            {
+                playerCombat.UseCurrentWeapon();
+            }
+            else
+            {
+                Debug.LogWarning($"[BasePlayer] Player {playerID} has no PlayerCombat component!");
+            }
         }
-        
+
         public void HandleSpecial()
         {
             Debug.Log($"[BasePlayer] Player {playerID} special input received");
@@ -409,7 +416,7 @@ namespace ProjectMayhem.Player
         private void ResetJumpCount()
         {
             jumpCount = 0;
-            EndDropDown(); 
+            EndDropDown();
         }
 
         public void EnableTripleJump()
@@ -422,7 +429,7 @@ namespace ProjectMayhem.Player
         {
             enableTripleJump = false;
             if (jumpCount >= 3)
-                jumpCount = 2;  
+                jumpCount = 2;
             Debug.Log($"[BasePlayer] Player {playerID} triple jump disabled");
         }
 
@@ -433,30 +440,30 @@ namespace ProjectMayhem.Player
                 isGrounded = false;
                 return;
             }
-            
+
             Vector2 rayStart = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
-            float rayDistance = 0.3f; 
-            
+            float rayDistance = 0.3f;
+
             bool foundGround = false;
             for (int i = -1; i <= 1; i++)
             {
                 Vector2 multiRayStart = new Vector2(transform.position.x + i * capsuleCollider.size.x * 0.3f, transform.position.y - capsuleCollider.size.y / 2f);
                 RaycastHit2D hit = Physics2D.Raycast(multiRayStart, Vector2.down, rayDistance, groundLayerMask);
-                
+
                 if (hit.collider != null)
                 {
                     foundGround = true;
                     break;
                 }
             }
-            
+
             if (!foundGround)
             {
                 Vector2 boxSize = new Vector2(capsuleCollider.size.x * 0.9f, 0.1f);
                 Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - capsuleCollider.size.y / 2f);
                 foundGround = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundLayerMask);
             }
-            
+
             bool wasGrounded = isGrounded;
             isGrounded = foundGround;
         }
@@ -464,6 +471,10 @@ namespace ProjectMayhem.Player
         public void SetPlayerID(int id)
         {
             playerID = id;
+        }
+        public Vector2 GetMoveInput()
+        {
+            return moveInput;
         }
 
         public Vector2 GetVelocity()
@@ -501,12 +512,12 @@ namespace ProjectMayhem.Player
             transform.DOKill();
             transform.position = spawnPosition;
             rb.velocity = Vector2.zero;
-            
+
             ResetJumpCount();
             jumpCount = 0;
             canTripleJump = enableTripleJump;
             EndDropDown();
-            
+
             Debug.Log($"[BasePlayer] Player {playerID} reset to spawn position");
         }
 

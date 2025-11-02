@@ -4,7 +4,7 @@ using ProjectMayhem.Weapons;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "DoubleAmmoEffect", menuName = "Project Mayhem/Effects/Double Ammo")]
+    [CreateAssetMenu(fileName = "DoubleAmmoEffect", menuName = "ProjectMayhem/Effects/Double Ammo")]
     public class DoubleAmmoEffect : BaseEffect
     {
         protected override void OnApply(BasePlayer player)

@@ -3,7 +3,7 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
-    [CreateAssetMenu(fileName = "ShieldEffect", menuName = "Project Mayhem/Effects/Shield")]
+    [CreateAssetMenu(fileName = "ShieldEffect", menuName = "ProjectMayhem/Effects/Shield")]
     public class ShieldEffect : BaseEffect
     {
         [Header("Shield VFX")]
