@@ -147,6 +147,15 @@ namespace ProjectMayhem.Projectiles
             BasePlayer hitPlayer = other.GetComponent<BasePlayer>();
             if (hitPlayer == null) return;
 
+            //Check shield before applying damage
+            if (hitPlayer.Combat != null && hitPlayer.Combat.HasShield)
+            {
+                Debug.Log("[BaseProjectile] Hit shield! Destroyed.");
+                PlayHitEffects(transform.position);
+                DestroyProjectile();
+                return;
+            }
+
             // Get player's combat component
             PlayerCombat playerCombat = hitPlayer.Combat;
             if (playerCombat == null)
