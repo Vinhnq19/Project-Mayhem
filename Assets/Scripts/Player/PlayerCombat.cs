@@ -1,6 +1,7 @@
 using UnityEngine;
 using ProjectMayhem.Manager;
 using ProjectMayhem.Player;
+using ProjectMayhem.Weapons;
 
 namespace ProjectMayhem.Player
 {
@@ -16,6 +17,16 @@ namespace ProjectMayhem.Player
         [SerializeField] private float baseKnockbackMultiplier = 1f;
         [SerializeField] private float knockbackResistance = 1f;
 
+        [Header("Weapon System")]
+
+        [SerializeField] private Transform weaponHolder;  // Vị trí gắn weapon (child của player)
+        [SerializeField] private BaseWeapon startingWeapon;  // Weapon ban đầu (optional)
+
+        private BaseWeapon currentWeapon;
+        private bool canShoot = true;
+
+
+
         // Combat state
         private float currentDamagePercent = 0f;
         private bool isInvulnerable = false;
@@ -23,11 +34,19 @@ namespace ProjectMayhem.Player
         private BasePlayer basePlayer;
         private Rigidbody2D rb;
 
+        //Shield
+
+        private bool hasShield = false;
+
+        public bool HasShield => hasShield;
+
         // Properties
         public int PlayerID => playerID;
         public float CurrentDamagePercent => currentDamagePercent;
         public bool IsInvulnerable => isInvulnerable;
         public float MaxDamagePercent => maxDamagePercent;
+        public BaseWeapon CurrentWeapon => currentWeapon;
+        public bool CanShoot => canShoot;
 
         private void Awake()
         {
@@ -62,7 +81,7 @@ namespace ProjectMayhem.Player
 
         public void TakeDamage(float baseDamage, float baseKnockback, Vector2 knockbackDirection)
         {
-            if (isInvulnerable)
+            if (isInvulnerable || hasShield)
             {
                 Debug.Log($"[PlayerCombat] Player {playerID} is invulnerable, damage ignored");
                 return;
@@ -168,6 +187,15 @@ namespace ProjectMayhem.Player
                 StartInvulnerability();
                 invulnerabilityTimer = additionalTime;
             }
+        }
+        public void SetHasShield(bool hasShield)
+        {
+            this.hasShield = hasShield;
+        }
+        public void SetCanShoot(bool value)
+        {
+            canShoot = value;
+            Debug.Log($"[PlayerCombat] Player {playerID} canShoot = {value}");
         }
     }
 }

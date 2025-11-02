@@ -13,6 +13,7 @@ namespace ProjectMayhem.Player
         [Header("Player Settings")]
         [SerializeField] private int playerID = 1;
         [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float speedMultiplier = 1.0f;
         [SerializeField] private LayerMask groundLayerMask = 1;
 
         [Header("Jump Settings")]
@@ -67,10 +68,14 @@ namespace ProjectMayhem.Player
         private float targetVelocityX = 0f;
         private float velocityXSmoothing = 0f;
 
+        //Movement reversed
+        private bool isMovementReversed = false;
+
         // Properties
         public int PlayerID => playerID;
-        
+
         public float MoveSpeed => moveSpeed;
+        public float SpeedMultiplier => speedMultiplier;
         public float JumpForce => jumpForce;
         public Rigidbody2D Rigidbody => rb;
         public CapsuleCollider2D Collider => capsuleCollider;
@@ -385,7 +390,8 @@ namespace ProjectMayhem.Player
 
         public virtual void Move(Vector2 direction)
         {
-            float targetX = direction.x * moveSpeed;
+            if (isMovementReversed) direction.x = -direction.x;
+            float targetX = direction.x * moveSpeed * speedMultiplier;
             targetVelocityX = targetX;
         }
 
@@ -468,6 +474,21 @@ namespace ProjectMayhem.Player
         public void SetVelocity(Vector2 velocity)
         {
             rb.velocity = velocity;
+        }
+
+        public void SetMoveSpeed(float newSpeed)
+        {
+            moveSpeed = newSpeed;
+        }
+
+        public void SetSpeedMultiplier(float newMultiplier)
+        {
+            speedMultiplier = newMultiplier;
+        }
+
+        public void SetMovementReversed(bool isReversed)
+        {
+            isMovementReversed = isReversed;
         }
 
         public void AddForce(Vector2 force)
