@@ -44,7 +44,7 @@ public class WeaponData : ScriptableObject
 
 public enum WeaponType
 {
-    Gun, Bomb, Special
+    Gun, Bomb
 }
 
 

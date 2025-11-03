@@ -5,5 +5,15 @@ using UnityEngine;
 public enum GameEvent
 {
     PlayerChangeState,
-    WeaponChanged
+    WeaponChanged,
+    WeaponFired,
+    WeaponReloadStarted,  // (BasePlayer player, BaseWeapon weapon)
+    WeaponReloaded,       // (BasePlayer player, BaseWeapon weapon)
+    WeaponOutOfAmmo,
+    EffectApplied,
+    EffectRemoved,
+    ItemSpawned,
+    ItemPickedUp,
+    ItemDestroyed,
+    BombUsed  // (BasePlayer player, int remainingBombs)
 }

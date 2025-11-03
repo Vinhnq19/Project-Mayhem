@@ -19,12 +19,18 @@ namespace ProjectMayhem.Player
         [SerializeField] private float knockbackResistance = 1f;
 
         [Header("Weapon System")]
-
         [SerializeField] private Transform weaponHolder;  // Vị trí gắn weapon (child của player)
         [SerializeField] private BaseWeapon startingWeapon;  // Weapon ban đầu (optional)
 
         private BaseWeapon currentWeapon;
         private bool canShoot = true;
+
+        [Header("Bomb System (Special)")]
+        [SerializeField] private BombWeapon bombWeapon;  // Bomb prefab cố định cho player
+        [SerializeField] private int maxBombsPerLife = 3;  // Số bomb mỗi mạng
+        [SerializeField] private Transform bombSpawnPoint;  // Vị trí spawn bomb (optional)
+
+        private int currentBombCount;
 
 
 
@@ -48,6 +54,8 @@ namespace ProjectMayhem.Player
         public float MaxDamagePercent => maxDamagePercent;
         public BaseWeapon CurrentWeapon => currentWeapon;
         public bool CanShoot => canShoot;
+        public int CurrentBombCount => currentBombCount;
+        public int MaxBombsPerLife => maxBombsPerLife;
 
         private void Awake()
         {
@@ -69,6 +77,32 @@ namespace ProjectMayhem.Player
             if (startingWeapon != null)
             {
                 EquipWeapon(startingWeapon);
+            }
+
+            // Initialize bomb system
+            InitializeBombSystem();
+        }
+
+        private void InitializeBombSystem()
+        {
+            currentBombCount = maxBombsPerLife;
+
+            // Setup bomb weapon if provided
+            if (bombWeapon != null)
+            {
+                bombWeapon.SetOwner(basePlayer);
+                
+                // Set spawn point for bomb if not specified
+                if (bombSpawnPoint == null && weaponHolder != null)
+                {
+                    bombSpawnPoint = weaponHolder;
+                }
+
+                Debug.Log($"[PlayerCombat] Player {playerID} initialized with {currentBombCount} bombs");
+            }
+            else
+            {
+                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon assigned!");
             }
         }
 
@@ -283,6 +317,87 @@ namespace ProjectMayhem.Player
         {
             canShoot = value;
             Debug.Log($"[PlayerCombat] Player {playerID} canShoot = {value}");
+        }
+
+        // ==================== BOMB SYSTEM ====================
+
+        /// <summary>
+        /// Use special bomb (called from BasePlayer.HandleSpecial)
+        /// </summary>
+        public void UseSpecialBomb()
+        {
+            if (currentBombCount <= 0)
+            {
+                Debug.Log($"[PlayerCombat] Player {playerID} has no bombs left!");
+                return;
+            }
+
+            if (bombWeapon == null)
+            {
+                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon!");
+                return;
+            }
+
+            // Throw bomb
+            ThrowBomb();
+
+            // Consume bomb count
+            currentBombCount--;
+
+            Debug.Log($"[PlayerCombat] Player {playerID} used bomb. Remaining: {currentBombCount}/{maxBombsPerLife}");
+
+            // Emit event for UI update
+            EventBus.Emit(GameEvent.BombUsed, basePlayer, currentBombCount);
+        }
+
+        private void ThrowBomb()
+        {
+            // Temporarily set bomb weapon position for throw
+            Vector3 originalPosition = bombWeapon.transform.position;
+            Quaternion originalRotation = bombWeapon.transform.rotation;
+
+            if (bombSpawnPoint != null)
+            {
+                bombWeapon.transform.position = bombSpawnPoint.position;
+                bombWeapon.transform.rotation = bombSpawnPoint.rotation;
+            }
+
+            // Use bomb weapon (will handle spawning, pooling, physics)
+            bombWeapon.Use();
+
+            // Restore position (if bomb weapon is not instantiated each time)
+            bombWeapon.transform.position = originalPosition;
+            bombWeapon.transform.rotation = originalRotation;
+        }
+
+        /// <summary>
+        /// Reset bomb count (called when respawn)
+        /// </summary>
+        public void ResetBombCount()
+        {
+            currentBombCount = maxBombsPerLife;
+            Debug.Log($"[PlayerCombat] Player {playerID} bomb count reset to {currentBombCount}");
+        }
+
+        /// <summary>
+        /// Add bombs (for powerup items)
+        /// </summary>
+        public void AddBombs(int amount)
+        {
+            currentBombCount += amount;
+            Debug.Log($"[PlayerCombat] Player {playerID} gained {amount} bombs. Total: {currentBombCount}");
+
+            EventBus.Emit(GameEvent.BombUsed, basePlayer, currentBombCount);
+        }
+
+        /// <summary>
+        /// Set max bombs per life (for game settings)
+        /// </summary>
+        public void SetMaxBombsPerLife(int max)
+        {
+            maxBombsPerLife = Mathf.Max(0, max);
+            currentBombCount = Mathf.Min(currentBombCount, maxBombsPerLife);
+            Debug.Log($"[PlayerCombat] Player {playerID} max bombs set to {maxBombsPerLife}");
         }
     }
 }

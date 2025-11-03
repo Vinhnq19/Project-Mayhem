@@ -392,7 +392,14 @@ namespace ProjectMayhem.Player
 
         public void HandleSpecial()
         {
-            Debug.Log($"[BasePlayer] Player {playerID} special input received");
+            if (playerCombat != null)
+            {
+                playerCombat.UseSpecialBomb();
+            }
+            else
+            {
+                Debug.LogWarning($"[BasePlayer] Player {playerID} has no PlayerCombat component!");
+            }
         }
 
         public virtual void Move(Vector2 direction)
