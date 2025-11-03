@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using ProjectMayhem.Effects;
+using ProjectMayhem.Player;
 using UnityEngine;
 
-public class WeaponPickupEffect : MonoBehaviour
+[CreateAssetMenu(fileName = "WeaponPickup", menuName = "Project Mayhem/Effects/Weapon Pickup")]
+public class WeaponPickupEffect : BaseEffect
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Weapon Settings")]
+    public WeaponData weaponToGive;
+    
+    protected override void OnApply(BasePlayer player)
     {
+        if (player == null || player.Combat == null) return;
         
+        if (weaponToGive != null)
+        {
+            player.Combat.EquipWeaponFromData(weaponToGive);
+            Debug.Log($"[WeaponPickupEffect] Gave {weaponToGive.weaponName} to Player {player.PlayerID}");
+        }
+        
+        // Weapon pickup là instant effect, tự remove ngay
+        Remove(player);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnRemove(BasePlayer player)
     {
-        
+        // Nothing to remove
     }
 }

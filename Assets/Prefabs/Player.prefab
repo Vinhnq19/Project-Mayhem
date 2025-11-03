@@ -322,6 +322,9 @@ MonoBehaviour:
   knockbackResistance: 1
   weaponHolder: {fileID: 4245892458043635541}
   startingWeapon: {fileID: 5750965614283452944, guid: 4c311f34b1960e843994ff71845cb73c, type: 3}
+  bombWeapon: {fileID: 6610073486870696882, guid: 809cc1a9e3a710b41b419f9fabd5cbea, type: 3}
+  maxBombsPerLife: 3
+  bombSpawnPoint: {fileID: 0}
 --- !u!114 &1752643949145763827
 MonoBehaviour:
   m_ObjectHideFlags: 0

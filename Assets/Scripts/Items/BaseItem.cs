@@ -1,6 +1,7 @@
 using UnityEngine;
 using ProjectMayhem.Player;
 using ProjectMayhem.Effects;
+using ProjectMayhem.Manager;
 
 namespace ProjectMayhem.Items
 {
@@ -168,6 +169,16 @@ namespace ProjectMayhem.Items
         {
             Destroy(gameObject);
         }
+
+        private void OnDestroy()
+{
+    // Notify spawn manager when destroyed
+    ItemSpawnManager spawnManager = ItemSpawnManager.Instance;
+    if (spawnManager != null)
+    {
+        spawnManager.RemoveItem(this);
+    }
+}
 
         private void RespawnItem()
         {

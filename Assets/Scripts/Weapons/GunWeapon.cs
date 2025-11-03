@@ -45,13 +45,19 @@ public class GunWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!CanFire) return;
+        // If reloading, can't shoot
+        if (isReloading) return;
 
+        // If out of ammo, auto-reload
         if (currentAmmo <= 0)
         {
             PlayEmptySound();
+            TryAutoReload();
             return;
         }
+
+        // Check fire rate
+        if (Time.time < lastFireTime + (1f / fireRate)) return;
 
         for (int i = 0; i < projectilesPerShot; i++)
         {
@@ -62,6 +68,12 @@ public class GunWeapon : BaseWeapon
         PlayShootSound();
 
         Debug.Log($"[GunWeapon] Fired {projectilesPerShot} projectile(s). Ammo: {currentAmmo}/{maxAmmo}");
+
+        // Auto-reload if just ran out of ammo
+        if (currentAmmo <= 0)
+        {
+            TryAutoReload();
+        }
     }
 
     private void FireProjectile()

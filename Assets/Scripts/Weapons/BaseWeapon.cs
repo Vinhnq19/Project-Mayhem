@@ -93,9 +93,11 @@ namespace ProjectMayhem.Weapons
 
             if (reloadSound != null)
             {
-                // EventBus.Raise(new PlaySoundEvent(reloadSound, transform.position));
                 AudioSource.PlayClipAtPoint(reloadSound, transform.position);
             }
+
+            // Emit reload started event
+            EventBus.Emit(GameEvent.WeaponReloadStarted, owner, this);
 
             Debug.Log($"[BaseWeapon] {GetType().Name} reloading...");
         }
@@ -104,7 +106,19 @@ namespace ProjectMayhem.Weapons
         {
             currentAmmo = maxAmmo;
             isReloading = false;
+
+            // Emit reload finished event
+            EventBus.Emit(GameEvent.WeaponReloaded, owner, this);
+
             Debug.Log($"[BaseWeapon] {GetType().Name} reloaded. Ammo: {currentAmmo}/{maxAmmo}");
+        }
+
+        protected virtual void TryAutoReload()
+        {
+            if (currentAmmo <= 0 && !isReloading)
+            {
+                Reload();
+            }
         }
 
         protected virtual void ConsumeAmmo()

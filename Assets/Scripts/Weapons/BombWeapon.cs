@@ -49,20 +49,20 @@ public class BombWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!CanFire) return;
-
-        if (currentAmmo <= 0)
+        // Bomb system không check ammo - PlayerCombat check bombCount
+        // Chỉ check fire rate
+        if (Time.time < lastFireTime + (1f / fireRate))
         {
-            PlayEmptySound();
             return;
         }
 
         ThrowBomb();
 
-        ConsumeAmmo();
+        // Update last fire time (không consume ammo)
+        lastFireTime = Time.time;
         PlayShootSound();
 
-        Debug.Log($"[BombWeapon] Threw bomb. Ammo: {currentAmmo}/{maxAmmo}");
+        Debug.Log($"[BombWeapon] Threw bomb");
     }
 
     private void ThrowBomb()
