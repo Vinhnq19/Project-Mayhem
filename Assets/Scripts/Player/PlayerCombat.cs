@@ -23,6 +23,7 @@ namespace ProjectMayhem.Player
         [SerializeField] private BaseWeapon startingWeapon;  // Weapon ban đầu (optional)
 
         private BaseWeapon currentWeapon;
+        private BaseWeapon startingWeaponInstance;  // Keep reference to instantiated starting weapon
         private bool canShoot = true;
 
         [Header("Bomb System (Special)")]
@@ -76,7 +77,7 @@ namespace ProjectMayhem.Player
 
             if (startingWeapon != null)
             {
-                EquipWeapon(startingWeapon);
+                EquipStartingWeapon();
             }
 
             // Initialize bomb system
@@ -144,23 +145,70 @@ namespace ProjectMayhem.Player
             }
         }
 
-        public void EquipWeapon(BaseWeapon weaponPrefab)
+        private void EquipStartingWeapon()
         {
-            if (currentWeapon != null)
+            if (startingWeapon == null || weaponHolder == null) return;
+
+            // If we already have starting weapon instance, just switch to it
+            if (startingWeaponInstance != null)
+            {
+                if (currentWeapon != null && currentWeapon != startingWeaponInstance)
+                {
+                    currentWeapon.gameObject.SetActive(false);
+                }
+                
+                startingWeaponInstance.gameObject.SetActive(true);
+                currentWeapon = startingWeaponInstance;
+                
+                Debug.Log($"[PlayerCombat] Player {playerID} switched back to starting weapon");
+            }
+            else
+            {
+                // First time, create the starting weapon instance
+                startingWeaponInstance = Instantiate(startingWeapon, weaponHolder);
+                startingWeaponInstance.transform.localPosition = Vector3.zero;
+                startingWeaponInstance.SetOwner(basePlayer);
+                startingWeaponInstance.SetAsStartingWeapon(true);
+                currentWeapon = startingWeaponInstance;
+                
+                Debug.Log($"[PlayerCombat] Player {playerID} equipped starting weapon: {startingWeapon.name}");
+            }
+
+            EventBus.Emit(GameEvent.WeaponChanged, basePlayer, currentWeapon);
+        }
+
+        public void EquipWeapon(BaseWeapon weaponPrefab, bool isStartingWeapon = false)
+        {
+            if (weaponPrefab == null || weaponHolder == null) return;
+
+            // If equipping starting weapon, use the dedicated method
+            if (isStartingWeapon)
+            {
+                EquipStartingWeapon();
+                return;
+            }
+
+            // Hide starting weapon but don't destroy it
+            if (startingWeaponInstance != null)
+            {
+                startingWeaponInstance.gameObject.SetActive(false);
+            }
+
+            // Destroy previous pickup weapon (not starting weapon)
+            if (currentWeapon != null && currentWeapon != startingWeaponInstance)
             {
                 Destroy(currentWeapon.gameObject);
             }
 
-            if (weaponPrefab != null && weaponHolder != null)
-            {
-                currentWeapon = Instantiate(weaponPrefab, weaponHolder);
-                currentWeapon.transform.localPosition = Vector3.zero;
-                currentWeapon.SetOwner(basePlayer);
+            // Create new pickup weapon
+            currentWeapon = Instantiate(weaponPrefab, weaponHolder);
+            currentWeapon.transform.localPosition = Vector3.zero;
+            currentWeapon.SetOwner(basePlayer);
+            currentWeapon.SetAsStartingWeapon(false);  // Pickup weapons are not starting weapons
 
-                Debug.Log($"[PlayerCombat] Player {playerID} equipped {weaponPrefab.name}");
+            Debug.Log($"[PlayerCombat] Player {playerID} equipped pickup weapon: {weaponPrefab.name}");
 
-                EventBus.Emit(GameEvent.WeaponChanged, basePlayer, currentWeapon);
-            }
+            EventBus.Emit(GameEvent.WeaponChanged, basePlayer, currentWeapon);
         }
 
         public void EquipWeaponFromData(WeaponData weaponData)
@@ -193,11 +241,46 @@ namespace ProjectMayhem.Player
             if (currentWeapon != null && canShoot)
             {
                 currentWeapon.Use();
+
+                // Check if pickup weapon is out of ammo (not starting weapon)
+                if (currentWeapon != startingWeaponInstance && 
+                    currentWeapon.CurrentAmmo <= 0 && 
+                    !currentWeapon.IsReloading)
+                {
+                    Debug.Log($"[PlayerCombat] Player {playerID} pickup weapon out of ammo, switching to starting weapon");
+                    SwitchToStartingWeapon();
+                }
             }
             else if (!canShoot)
             {
                 Debug.Log($"[PlayerCombat] Player {playerID} is silenced!");
             }
+        }
+
+        /// <summary>
+        /// Switch back to starting weapon (called when pickup weapon runs out of ammo)
+        /// </summary>
+        public void SwitchToStartingWeapon()
+        {
+            if (startingWeaponInstance == null)
+            {
+                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no starting weapon to switch to!");
+                return;
+            }
+
+            // Destroy current pickup weapon
+            if (currentWeapon != null && currentWeapon != startingWeaponInstance)
+            {
+                Destroy(currentWeapon.gameObject);
+            }
+
+            // Switch to starting weapon
+            startingWeaponInstance.gameObject.SetActive(true);
+            currentWeapon = startingWeaponInstance;
+
+            Debug.Log($"[PlayerCombat] Player {playerID} switched back to starting weapon");
+
+            EventBus.Emit(GameEvent.WeaponChanged, basePlayer, currentWeapon);
         }
 
         public void TakeDamage(float baseDamage, float baseKnockback, Vector2 knockbackDirection)

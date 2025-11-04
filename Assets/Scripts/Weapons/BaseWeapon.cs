@@ -30,6 +30,7 @@ namespace ProjectMayhem.Weapons
         protected float lastFireTime;
         protected bool isReloading = false;
         protected BasePlayer owner;
+        protected bool isStartingWeapon = false;  // Track if this is the starting weapon (infinite ammo with reload)
 
         // Properties
         public float BaseDamage => baseDamage;
@@ -115,10 +116,20 @@ namespace ProjectMayhem.Weapons
 
         protected virtual void TryAutoReload()
         {
-            if (currentAmmo <= 0 && !isReloading)
+            // Only auto-reload for starting weapon
+            if (isStartingWeapon && currentAmmo <= 0 && !isReloading)
             {
                 Reload();
             }
+        }
+
+        /// <summary>
+        /// Mark this weapon as the starting weapon (enables auto-reload)
+        /// </summary>
+        public virtual void SetAsStartingWeapon(bool isStarting)
+        {
+            isStartingWeapon = isStarting;
+            Debug.Log($"[BaseWeapon] {GetType().Name} set as starting weapon: {isStarting}");
         }
 
         protected virtual void ConsumeAmmo()

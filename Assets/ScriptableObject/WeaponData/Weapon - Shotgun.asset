@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 812ce40b1c4042840a369a72f1a14136, type: 3}
-  m_Name: Weapon - Bomb
+  m_Name: Weapon - Shotgun
   m_EditorClassIdentifier: 
-  weaponName: Bomb
-  weaponIcon: {fileID: 0}
-  weaponType: 1
-  baseDamage: 10
-  baseKnockback: 5
+  weaponName: Shotgun
+  weaponIcon: {fileID: 1591693851, guid: 38ee99c4ec4ab8842977fdc63f526e36, type: 3}
+  weaponType: 0
+  baseDamage: 20
+  baseKnockback: 10
   fireRate: 1
-  maxAmmo: 10
+  maxAmmo: 7
   reloadTime: 2
   infiniteAmmo: 0
-  projectilePrefab: {fileID: 0}
-  projectileSpeed: 20
-  projectilesPerShot: 1
-  spreadAngle: 0
+  projectilePrefab: {fileID: 5140065928392982526, guid: 85c850a0e8f9fb94896e70ea02b0a29c, type: 3}
+  projectileSpeed: 40
+  projectilesPerShot: 5
+  spreadAngle: 10
   throwForce: 15
   throwAngle: 45
   explosionRadius: 5

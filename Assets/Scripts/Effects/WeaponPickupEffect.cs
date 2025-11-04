@@ -4,7 +4,7 @@ using ProjectMayhem.Effects;
 using ProjectMayhem.Player;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponPickup", menuName = "Project Mayhem/Effects/Weapon Pickup")]
+[CreateAssetMenu(fileName = "WeaponPickup", menuName = "ProjectMayhem/Effects/Weapon Pickup")]
 public class WeaponPickupEffect : BaseEffect
 {
     [Header("Weapon Settings")]

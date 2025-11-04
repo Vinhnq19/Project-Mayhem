@@ -54,6 +54,7 @@ namespace ProjectMayhem.Player
 
         private bool jumpInputPressed = false;
         private bool dropDownInputPressed = false;
+        private bool isShootButtonHeld = false;  // Track if shoot button is being held
 
         // Jump state tracking
         private int jumpCount = 0;
@@ -170,6 +171,7 @@ namespace ProjectMayhem.Player
 
             HandleDropDownTimer();
             HandleActionInput();
+            HandleContinuousShooting();  // Handle continuous shooting when button is held
         }
 
         private void LateUpdate()
@@ -378,15 +380,16 @@ namespace ProjectMayhem.Player
                 }
             }
         }
-        public void HandleShoot()
+        public void HandleShoot(bool isPressed)
         {
-            if (playerCombat != null)
+            isShootButtonHeld = isPressed;
+        }
+
+        private void HandleContinuousShooting()
+        {
+            if (isShootButtonHeld && playerCombat != null)
             {
                 playerCombat.UseCurrentWeapon();
-            }
-            else
-            {
-                Debug.LogWarning($"[BasePlayer] Player {playerID} has no PlayerCombat component!");
             }
         }
 

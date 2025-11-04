@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 812ce40b1c4042840a369a72f1a14136, type: 3}
-  m_Name: Weapon - Bomb
+  m_Name: Weapon - Sniper
   m_EditorClassIdentifier: 
-  weaponName: Bomb
-  weaponIcon: {fileID: 0}
-  weaponType: 1
-  baseDamage: 10
-  baseKnockback: 5
+  weaponName: Sniper
+  weaponIcon: {fileID: 1385024480, guid: cab4d89cd626db84f8215bb68afe21b2, type: 3}
+  weaponType: 0
+  baseDamage: 50
+  baseKnockback: 30
   fireRate: 1
-  maxAmmo: 10
-  reloadTime: 2
+  maxAmmo: 5
+  reloadTime: 3
   infiniteAmmo: 0
-  projectilePrefab: {fileID: 0}
-  projectileSpeed: 20
+  projectilePrefab: {fileID: 8229862190085078507, guid: 39ffb6c7f4d6125479a0b54fcbf75763, type: 3}
+  projectileSpeed: 40
   projectilesPerShot: 1
   spreadAngle: 0
   throwForce: 15
