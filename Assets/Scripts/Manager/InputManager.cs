@@ -29,13 +29,13 @@ namespace ProjectMayhem.Manager
         // Events for Player 1
         public event Action<Vector2> OnPlayer1_Move;
         public event Action<bool> OnPlayer1_Jump;
-        public event Action OnPlayer1_Shoot;
+        public event Action<bool> OnPlayer1_Shoot;  // Changed to support hold shooting
         public event Action OnPlayer1_Special;
 
         // Events for Player 2
         public event Action<Vector2> OnPlayer2_Move;
         public event Action<bool> OnPlayer2_Jump;
-        public event Action OnPlayer2_Shoot;
+        public event Action<bool> OnPlayer2_Shoot;  // Changed to support hold shooting
         public event Action OnPlayer2_Special;
 
         // UI Events
@@ -102,7 +102,10 @@ namespace ProjectMayhem.Manager
             }
 
             if (player1ShootAction != null)
+            {
                 player1ShootAction.performed += OnPlayer1ShootPerformed;
+                player1ShootAction.canceled += OnPlayer1ShootCanceled;
+            }
 
             if (player1SpecialAction != null)
                 player1SpecialAction.performed += OnPlayer1SpecialPerformed;
@@ -121,7 +124,10 @@ namespace ProjectMayhem.Manager
             }
 
             if (player2ShootAction != null)
+            {
                 player2ShootAction.performed += OnPlayer2ShootPerformed;
+                player2ShootAction.canceled += OnPlayer2ShootCanceled;
+            }
 
             if (player2SpecialAction != null)
                 player2SpecialAction.performed += OnPlayer2SpecialPerformed;
@@ -169,7 +175,12 @@ namespace ProjectMayhem.Manager
 
         private void OnPlayer1ShootPerformed(InputAction.CallbackContext context)
         {
-            OnPlayer1_Shoot?.Invoke();
+            OnPlayer1_Shoot?.Invoke(true);
+        }
+
+        private void OnPlayer1ShootCanceled(InputAction.CallbackContext context)
+        {
+            OnPlayer1_Shoot?.Invoke(false);
         }
 
         private void OnPlayer1SpecialPerformed(InputAction.CallbackContext context)
@@ -204,7 +215,12 @@ namespace ProjectMayhem.Manager
 
         private void OnPlayer2ShootPerformed(InputAction.CallbackContext context)
         {
-            OnPlayer2_Shoot?.Invoke();
+            OnPlayer2_Shoot?.Invoke(true);
+        }
+
+        private void OnPlayer2ShootCanceled(InputAction.CallbackContext context)
+        {
+            OnPlayer2_Shoot?.Invoke(false);
         }
 
         private void OnPlayer2SpecialPerformed(InputAction.CallbackContext context)

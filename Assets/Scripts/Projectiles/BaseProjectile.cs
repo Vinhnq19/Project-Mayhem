@@ -164,8 +164,15 @@ namespace ProjectMayhem.Projectiles
                 return;
             }
 
-            // Calculate knockback direction
-            Vector2 knockbackDirection = (hitPlayer.transform.position - transform.position).normalized;
+            // Calculate knockback direction - use projectile velocity direction for consistent knockback
+            // This prevents weird knockback when projectile hits from behind (shotgun spread, etc)
+            Vector2 knockbackDirection = velocity.normalized;
+            
+            // Fallback to position-based direction if velocity is zero
+            if (knockbackDirection == Vector2.zero)
+            {
+                knockbackDirection = (hitPlayer.transform.position - transform.position).normalized;
+            }
 
             // Apply damage and knockback
             playerCombat.TakeDamage(damage, knockback, knockbackDirection);
