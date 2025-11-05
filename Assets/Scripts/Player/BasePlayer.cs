@@ -169,6 +169,7 @@ namespace ProjectMayhem.Player
                 ResetJumpCount();
             }
 
+            HandleFlip();
             HandleDropDownTimer();
             HandleActionInput();
             HandleContinuousShooting();  // Handle continuous shooting when button is held
@@ -476,6 +477,18 @@ namespace ProjectMayhem.Player
 
             bool wasGrounded = isGrounded;
             isGrounded = foundGround;
+        }
+
+        private void HandleFlip()
+        {
+            if (moveInput.x > 0f)
+            {
+                transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            }
+            else if (moveInput.x < 0f)
+            {
+                transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            }
         }
 
         public void SetPlayerID(int id)

@@ -31,11 +31,6 @@ public class WeaponData : ScriptableObject
     public float throwForce = 15f;
     public float throwAngle = 45f;
     public float explosionRadius = 5f;
-    
-    [Header("Audio")]
-    public AudioClip shootSound;
-    public AudioClip reloadSound;
-    public AudioClip emptySound;
 
     [Header("Visual")]
     public GameObject impactEffectPrefab;

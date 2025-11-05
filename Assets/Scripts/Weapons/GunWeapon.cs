@@ -7,12 +7,6 @@ using UnityEngine;
 
 public class GunWeapon : BaseWeapon
 {
-    [Header("Gun Settings")]
-    [SerializeField] private BaseProjectile projectilePrefab;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float projectileSpeed = 20f;
-    [SerializeField] private int projectilesPerShot = 1;
-    [SerializeField] private float spreadAngle = 0f;
 
     [Header("Object Pooling")]
     [SerializeField] private ObjectPooler objectPooler;
@@ -37,8 +31,6 @@ public class GunWeapon : BaseWeapon
             projectilePrefab = data.projectilePrefab;
             projectileSpeed = data.projectileSpeed;
             projectilesPerShot = data.projectilesPerShot;
-            spreadAngle = data.spreadAngle;
-
             Debug.Log($"[GunWeapon] Loaded gun-specific data from {data.weaponName}");
         }
     }
@@ -51,7 +43,7 @@ public class GunWeapon : BaseWeapon
         // If out of ammo, auto-reload
         if (currentAmmo <= 0)
         {
-            PlayEmptySound();
+            // PlayEmptySound();
             TryAutoReload();
             return;
         }
@@ -65,7 +57,7 @@ public class GunWeapon : BaseWeapon
         }
 
         ConsumeAmmo();
-        PlayShootSound();
+        // PlayShootSound();
 
         Debug.Log($"[GunWeapon] Fired {projectilesPerShot} projectile(s). Ammo: {currentAmmo}/{maxAmmo}");
 
@@ -106,22 +98,8 @@ public class GunWeapon : BaseWeapon
             Debug.LogError("[GunWeapon] Projectile does not have BaseProjectile component!");
             return;
         }
-
-        // Calculate direction based on weapon holder's scale
-        // When weaponHolder.localScale.x = -1 (facing left), we need to flip direction
-        Transform holder = transform.parent;
-        float facingDirection = (holder != null && holder.localScale.x < 0) ? -1f : 1f;
-        
-        // Base direction from firePoint, adjusted for facing direction
-        Vector2 direction = firePoint.right * facingDirection;
-        
-        if (spreadAngle > 0f)
-        {
-            float randomSpread = Random.Range(-spreadAngle, spreadAngle);
-            direction = Quaternion.Euler(0, 0, randomSpread) * direction;
-        }
-
-        projectile.Initialize(owner, baseDamage, baseKnockback, direction * projectileSpeed);
+        Vector2 direction = player.transform.localEulerAngles.y == 180f ? Vector2.left : Vector2.right;
+        projectile.Initialize(player, baseDamage, baseKnockback, projectileSpeed * direction);
     }
 
     public void SetProjectilePrefab(BaseProjectile prefab)

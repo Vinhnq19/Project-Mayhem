@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55b6ce514548f9e40ad09e53e781cac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 0.15
+  lifetime: 0.3
   destroyOnHit: 1
   hitLayerMask:
     serializedVersion: 2
