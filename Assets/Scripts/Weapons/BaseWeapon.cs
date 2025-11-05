@@ -9,6 +9,11 @@ namespace ProjectMayhem.Weapons
 
     public abstract class BaseWeapon : MonoBehaviour
     {
+        [Header("Gun Settings")]
+        [SerializeField] protected BaseProjectile projectilePrefab;
+        [SerializeField] protected Transform firePoint;
+        [SerializeField] protected float projectileSpeed = 20f;
+        [SerializeField] protected int projectilesPerShot = 1;
         [Header("Weapon Settings")]
         [SerializeField] protected float baseDamage = 10f;
         [SerializeField] protected float baseKnockback = 5f;
@@ -19,17 +24,11 @@ namespace ProjectMayhem.Weapons
         [Header("Weapon Settings")]
         [SerializeField] protected WeaponData weaponData;
 
-        [Header("Audio Settings")]
-        [SerializeField] protected AudioClip shootSound;
-        [SerializeField] protected AudioClip reloadSound;
-        [SerializeField] protected AudioClip emptySound;
-
-
         // Weapon state
         protected int currentAmmo;
         protected float lastFireTime;
         protected bool isReloading = false;
-        protected BasePlayer owner;
+        protected BasePlayer player;
         protected bool isStartingWeapon = false;  // Track if this is the starting weapon (infinite ammo with reload)
 
         // Properties
@@ -39,12 +38,12 @@ namespace ProjectMayhem.Weapons
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo => currentAmmo;
         public bool IsReloading => isReloading;
-        public BasePlayer Owner => owner;
+        public BasePlayer Owner => player;
         public bool CanFire => !isReloading && currentAmmo > 0 && Time.time >= lastFireTime + (1f / fireRate);
 
         protected virtual void Awake()
         {
-            owner = GetComponentInParent<BasePlayer>();
+            player = GetComponentInParent<BasePlayer>();
         }
 
         protected virtual void Start()
@@ -74,9 +73,6 @@ namespace ProjectMayhem.Weapons
             fireRate = data.fireRate;
             maxAmmo = data.maxAmmo;
             reloadTime = data.reloadTime;
-            shootSound = data.shootSound;
-            reloadSound = data.reloadSound;
-            emptySound = data.emptySound;
 
             currentAmmo = maxAmmo;
             lastFireTime = 0f;
@@ -92,13 +88,13 @@ namespace ProjectMayhem.Weapons
             isReloading = true;
             Invoke(nameof(FinishReload), reloadTime);
 
-            if (reloadSound != null)
-            {
-                AudioSource.PlayClipAtPoint(reloadSound, transform.position);
-            }
+            // if (reloadSound != null)
+            // {
+            //     AudioSource.PlayClipAtPoint(reloadSound, transform.position);
+            // }
 
             // Emit reload started event
-            EventBus.Emit(GameEvent.WeaponReloadStarted, owner, this);
+            EventBus.Emit(GameEvent.WeaponReloadStarted, player, this);
 
             Debug.Log($"[BaseWeapon] {GetType().Name} reloading...");
         }
@@ -109,7 +105,7 @@ namespace ProjectMayhem.Weapons
             isReloading = false;
 
             // Emit reload finished event
-            EventBus.Emit(GameEvent.WeaponReloaded, owner, this);
+            EventBus.Emit(GameEvent.WeaponReloaded, player, this);
 
             Debug.Log($"[BaseWeapon] {GetType().Name} reloaded. Ammo: {currentAmmo}/{maxAmmo}");
         }
@@ -138,27 +134,9 @@ namespace ProjectMayhem.Weapons
             lastFireTime = Time.time;
         }
 
-        protected virtual void PlayShootSound()
-        {
-            if (shootSound != null)
-            {
-                // EventBus.Raise(new PlaySoundEvent(shootSound, transform.position));
-                AudioSource.PlayClipAtPoint(shootSound, transform.position);
-            }
-        }
-
-        protected virtual void PlayEmptySound()
-        {
-            if (emptySound != null)
-            {
-                // EventBus.Raise(new PlaySoundEvent(emptySound, transform.position));
-                AudioSource.PlayClipAtPoint(emptySound, transform.position);
-            }
-        }
-
         public virtual void SetOwner(BasePlayer player)
         {
-            owner = player;
+            this.player = player;
         }
 
         public virtual string GetWeaponInfo()

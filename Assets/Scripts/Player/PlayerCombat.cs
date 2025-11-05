@@ -69,12 +69,6 @@ namespace ProjectMayhem.Player
             currentDamagePercent = 0f;
             isInvulnerable = false;
 
-            // Initialize weapon holder to face right (default)
-            if (weaponHolder != null)
-            {
-                weaponHolder.localScale = Vector3.one;
-            }
-
             if (startingWeapon != null)
             {
                 EquipStartingWeapon();
@@ -119,30 +113,12 @@ namespace ProjectMayhem.Player
             }
 
             // Flip weapon based on player facing direction
-            UpdateWeaponFlip();
-
             // // Decay damage over time
             // if (currentDamagePercent > 0f)
             // {
             //     currentDamagePercent -= damageDecayRate * Time.deltaTime;
             //     currentDamagePercent = Mathf.Max(0f, currentDamagePercent);
             // }
-        }
-
-        private void UpdateWeaponFlip()
-        {
-            if (weaponHolder == null || basePlayer == null) return;
-
-            // Get player's move input to determine facing direction (same as PlayerAnimation)
-            float moveX = basePlayer.MoveInput.x;
-            
-            // Only update facing when player has input
-            if (Mathf.Abs(moveX) > 0.1f)
-            {
-                // Flip weapon holder: scale.x = -1 when moving left (same logic as sprite.flipX)
-                float scaleX = (moveX < 0) ? -1f : 1f;
-                weaponHolder.localScale = new Vector3(scaleX, 1f, 1f);
-            }
         }
 
         private void EquipStartingWeapon()
@@ -166,7 +142,6 @@ namespace ProjectMayhem.Player
             {
                 // First time, create the starting weapon instance
                 startingWeaponInstance = Instantiate(startingWeapon, weaponHolder);
-                startingWeaponInstance.transform.localPosition = Vector3.zero;
                 startingWeaponInstance.SetOwner(basePlayer);
                 startingWeaponInstance.SetAsStartingWeapon(true);
                 currentWeapon = startingWeaponInstance;
@@ -202,7 +177,6 @@ namespace ProjectMayhem.Player
 
             // Create new pickup weapon
             currentWeapon = Instantiate(weaponPrefab, weaponHolder);
-            currentWeapon.transform.localPosition = Vector3.zero;
             currentWeapon.SetOwner(basePlayer);
             currentWeapon.SetAsStartingWeapon(false);  // Pickup weapons are not starting weapons
 

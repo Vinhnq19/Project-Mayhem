@@ -36,11 +36,6 @@ public class PlayerAnimation : MonoBehaviour
         EventBus.On(GameEvent.PlayerChangeState, changeAnimationAction);
     }
 
-    void Update()
-    {
-        HandleFlip();
-    }
-
     private void ChangeAnimation(PlayerStateMachine stateMachine)
     {
         var current = stateMachine.CurrentState;
@@ -60,18 +55,5 @@ public class PlayerAnimation : MonoBehaviour
         }
     }
     
-    private void HandleFlip()
-    {
-        if (basePlayer == null) return; 
-
-        float moveX = basePlayer.MoveInput.x;
-
-        if (Mathf.Abs(moveX) > 0.1f)
-        {
-            if (visualSpriteRenderer != null) 
-            {
-                visualSpriteRenderer.flipX = (moveX < 0);
-            }
-        }
-    }
+   
 }

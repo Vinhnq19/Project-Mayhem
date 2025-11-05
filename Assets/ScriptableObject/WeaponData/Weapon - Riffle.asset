@@ -17,18 +17,15 @@ MonoBehaviour:
   weaponType: 0
   baseDamage: 15
   baseKnockback: 10
-  fireRate: 5
+  fireRate: 4
   maxAmmo: 30
   reloadTime: 2
   infiniteAmmo: 0
   projectilePrefab: {fileID: 8229862190085078507, guid: 39ffb6c7f4d6125479a0b54fcbf75763, type: 3}
-  projectileSpeed: 30
-  projectilesPerShot: 1
+  projectileSpeed: 25
+  projectilesPerShot: 3
   spreadAngle: 0
   throwForce: 15
   throwAngle: 45
   explosionRadius: 5
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  emptySound: {fileID: 0}
   impactEffectPrefab: {fileID: 0}

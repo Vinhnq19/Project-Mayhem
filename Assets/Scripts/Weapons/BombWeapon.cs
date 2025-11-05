@@ -9,7 +9,6 @@ public class BombWeapon : BaseWeapon
 {
     [Header("Bomb Settings")]
     [SerializeField] private BaseProjectile bombPrefab;
-    [SerializeField] private Transform firePoint;
     [SerializeField] private float throwForce = 15f;
     [SerializeField] private float throwAngle = 45f;
     [SerializeField] private float explosionRadius = 5f;
@@ -60,7 +59,7 @@ public class BombWeapon : BaseWeapon
 
         // Update last fire time (không consume ammo)
         lastFireTime = Time.time;
-        PlayShootSound();
+        // PlayShootSound();
 
         Debug.Log($"[BombWeapon] Threw bomb");
     }
@@ -98,7 +97,7 @@ public class BombWeapon : BaseWeapon
 
         Vector2 throwDirection = CalculateThrowDirection();
 
-        bomb.Initialize(owner, explosionDamage, explosionKnockback, throwDirection * throwForce);
+        bomb.Initialize(player, explosionDamage, explosionKnockback, throwDirection * throwForce);
     }
 
     private Vector2 CalculateThrowDirection()
@@ -106,9 +105,9 @@ public class BombWeapon : BaseWeapon
         float angleRad = throwAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
 
-        if (owner != null)
+        if (player != null)
         {
-            float facingDirection = Mathf.Sign(owner.transform.localScale.x);
+            float facingDirection = Mathf.Sign(player.transform.localScale.x);
             direction.x *= facingDirection;
         }
 

@@ -1100,11 +1100,6 @@ Transform:
   - {fileID: 363543038}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1255622972 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4245892458043635541, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
-  m_PrefabInstance: {fileID: 1444688973}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1357511642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1229,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3391204110673231639, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+      propertyPath: m_GravityScale
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: playerID
       value: 2
@@ -1245,7 +1244,7 @@ PrefabInstance:
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: weaponHolder
       value: 
-      objectReference: {fileID: 1255622972}
+      objectReference: {fileID: 1525984622}
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: bombSpawnPoint
       value: 
@@ -1346,6 +1345,11 @@ PrefabInstance:
 --- !u!4 &1444688974 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5837380309415628731, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+  m_PrefabInstance: {fileID: 1444688973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1525984622 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3797258689383437560, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
   m_PrefabInstance: {fileID: 1444688973}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1593547064
@@ -1514,9 +1518,9 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8389550054303863505, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
   m_PrefabInstance: {fileID: 1444688973}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1921901419 stripped
+--- !u!4 &1915715187 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4245892458043635541, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3797258689383437560, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
   m_PrefabInstance: {fileID: 9133331864423647620}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1932458690
@@ -1663,6 +1667,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3391204110673231639, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+      propertyPath: m_GravityScale
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: bombWeapon
       value: 
@@ -1670,7 +1678,7 @@ PrefabInstance:
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: weaponHolder
       value: 
-      objectReference: {fileID: 1921901419}
+      objectReference: {fileID: 1915715187}
     - target: {fileID: 4257615565187299057, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: bombSpawnPoint
       value: 
