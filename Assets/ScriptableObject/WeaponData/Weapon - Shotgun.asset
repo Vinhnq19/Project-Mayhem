@@ -16,19 +16,12 @@ MonoBehaviour:
   weaponIcon: {fileID: 1591693851, guid: 38ee99c4ec4ab8842977fdc63f526e36, type: 3}
   weaponType: 0
   baseDamage: 20
-  baseKnockback: 10
+  baseKnockback: 30
   fireRate: 1
   maxAmmo: 7
   reloadTime: 2
   infiniteAmmo: 0
   projectilePrefab: {fileID: 5140065928392982526, guid: 85c850a0e8f9fb94896e70ea02b0a29c, type: 3}
-  projectileSpeed: 40
-  projectilesPerShot: 5
-  spreadAngle: 10
-  throwForce: 15
-  throwAngle: 45
-  explosionRadius: 5
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  emptySound: {fileID: 0}
+  projectileSpeed: 20
+  projectilesPerShot: 1
   impactEffectPrefab: {fileID: 0}

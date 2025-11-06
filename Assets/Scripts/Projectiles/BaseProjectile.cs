@@ -22,6 +22,7 @@ namespace ProjectMayhem.Projectiles
         [SerializeField] protected ParticleSystem hitEffect;
         [SerializeField] protected TrailRenderer trailRenderer;
 
+
         [Header("Audio Settings")]
         [SerializeField] protected AudioClip hitSound;
 

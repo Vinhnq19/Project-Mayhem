@@ -13,22 +13,15 @@ MonoBehaviour:
   m_Name: Weapon - Bomb
   m_EditorClassIdentifier: 
   weaponName: Bomb
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   weaponType: 1
-  baseDamage: 10
-  baseKnockback: 5
+  baseDamage: 20
+  baseKnockback: 20
   fireRate: 1
   maxAmmo: 10
   reloadTime: 2
   infiniteAmmo: 0
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: -5189547481382406268, guid: ab91b4b3c7e161a44ab93494f67dcc86, type: 3}
   projectileSpeed: 20
   projectilesPerShot: 1
-  spreadAngle: 0
-  throwForce: 15
-  throwAngle: 45
-  explosionRadius: 5
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  emptySound: {fileID: 0}
   impactEffectPrefab: {fileID: 0}

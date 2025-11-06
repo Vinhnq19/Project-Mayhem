@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8122004880729339729}
   - component: {fileID: 9101590966731060071}
   - component: {fileID: 5140065928392982526}
+  - component: {fileID: 3591547212861424003}
   m_Layer: 0
   m_Name: BulletShotgun
   m_TagString: Bullet
@@ -76,8 +77,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1004480020, guid: e20aa0d866261894b90bef9865c0c8c6, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -161,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55b6ce514548f9e40ad09e53e781cac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 0.3
+  lifetime: 0.2
   destroyOnHit: 1
   hitLayerMask:
     serializedVersion: 2
@@ -170,3 +171,24 @@ MonoBehaviour:
   hitEffect: {fileID: 0}
   trailRenderer: {fileID: 0}
   hitSound: {fileID: 0}
+--- !u!95 &3591547212861424003
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7563962821489713145}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e899eae7624fb6741b3f7f3b40a10520, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

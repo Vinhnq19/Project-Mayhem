@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 5808149876201924069}
   - component: {fileID: 8073618155181347983}
   - component: {fileID: 3038089250883039038}
-  - component: {fileID: 7563447800257785038}
-  - component: {fileID: 8244764089432662317}
-  m_Layer: 0
+  - component: {fileID: 1233877266558884417}
+  - component: {fileID: -5189547481382406268}
+  m_Layer: 8
   m_Name: BombProjectile
-  m_TagString: Bomb Projectile
+  m_TagString: BombProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,11 +73,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 932256297
-  m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.8301887, g: 0.5567214, b: 0.49733, a: 1}
+  m_SortingLayerID: -1153110111
+  m_SortingLayer: 1
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -953490144, guid: b4707d0de98266842b34e4e5c9da8621, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -114,7 +114,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!58 &7563447800257785038
+--- !u!58 &1233877266558884417
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,13 +143,13 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.05157145}
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &8244764089432662317
+  m_Radius: 0.4123286
+--- !u!114 &-5189547481382406268
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3199849400969469141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55b6ce514548f9e40ad09e53e781cac2, type: 3}
+  m_Script: {fileID: 11500000, guid: df772c5c9bbf48846bc64985d3ff6a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 3
@@ -166,7 +166,19 @@ MonoBehaviour:
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  ignoreOwner: 1
+  ignoreOwner: 0
   hitEffect: {fileID: 0}
   trailRenderer: {fileID: 0}
   hitSound: {fileID: 0}
+  bombGravityScale: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  bounceForce: 0.3
+  explosionDelay: 2
+  explosionRadius: 1.5
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  explosionEffectPrefab: {fileID: 1670282180356910452, guid: 6d580be3060bd0c4a87ad9a900f85d26, type: 3}
+  explosionEffectOffset: {x: 0, y: 0.5}

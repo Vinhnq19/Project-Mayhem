@@ -25,12 +25,6 @@ public class WeaponData : ScriptableObject
     public BaseProjectile projectilePrefab;
     public float projectileSpeed = 20f;
     public int projectilesPerShot = 1;  // > 1 = shotgun spread
-    public float spreadAngle = 0f;
-    
-    [Header("Bomb Settings")]
-    public float throwForce = 15f;
-    public float throwAngle = 45f;
-    public float explosionRadius = 5f;
 
     [Header("Visual")]
     public GameObject impactEffectPrefab;

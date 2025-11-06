@@ -9,13 +9,11 @@ public class BombWeapon : BaseWeapon
 {
     [Header("Bomb Settings")]
     [SerializeField] private BaseProjectile bombPrefab;
-    [SerializeField] private float throwForce = 15f;
-    [SerializeField] private float throwAngle = 45f;
-    [SerializeField] private float explosionRadius = 5f;
     [SerializeField] private float explosionDamage = 20f;
     [SerializeField] private float explosionKnockback = 10f;
 
     [Header("Object Pooling")]
+    [SerializeField] private string bombPoolTag = "BombProjectile";
     [SerializeField] private ObjectPooler objectPooler;
 
     protected override void Start()
@@ -36,46 +34,40 @@ public class BombWeapon : BaseWeapon
         if (data != null)
         {
             bombPrefab = data.projectilePrefab;
-            throwForce = data.throwForce;
-            throwAngle = data.throwAngle;
-            explosionRadius = data.explosionRadius;
-            explosionDamage = data.baseDamage;  // Dùng baseDamage cho explosion
+            explosionDamage = data.baseDamage;
             explosionKnockback = data.baseKnockback;
 
-            Debug.Log($"[BombWeapon] Loaded bomb-specific data from {data.weaponName}");
+            Debug.Log($"[BombWeapon] Loaded data: {data.weaponName}");
         }
     }
 
     public override void Use()
     {
-        // Bomb system không check ammo - PlayerCombat check bombCount
-        // Chỉ check fire rate
-        if (Time.time < lastFireTime + (1f / fireRate))
-        {
-            return;
-        }
-
-        ThrowBomb();
-
-        // Update last fire time (không consume ammo)
-        lastFireTime = Time.time;
-        // PlayShootSound();
-
-        Debug.Log($"[BombWeapon] Threw bomb");
+        // Không check fire rate - có thể spawn bomb liên tục
+        SpawnBomb();
     }
 
-    private void ThrowBomb()
+    private void SpawnBomb()
     {
         if (bombPrefab == null)
         {
-            Debug.LogError("[BombWeapon] Bomb prefab is not assigned!");
+            Debug.LogError("[BombWeapon] Bomb prefab not assigned!");
             return;
         }
 
-        GameObject bombObj;
-        if (objectPooler != null)
+        // Spawn bomb từ pool hoặc Instantiate
+        GameObject bombObj = null;
+        
+        if (objectPooler != null && !string.IsNullOrEmpty(bombPoolTag))
         {
-            bombObj = objectPooler.SpawnFromPool(bombPrefab.name, firePoint.position, firePoint.rotation);
+            bombObj = objectPooler.SpawnFromPool(bombPoolTag, firePoint.position, firePoint.rotation);
+            
+            // Tự động tạo pool nếu chưa có
+            if (bombObj == null)
+            {
+                objectPooler.AddPool(bombPoolTag, bombPrefab.gameObject, 5);
+                bombObj = objectPooler.SpawnFromPool(bombPoolTag, firePoint.position, firePoint.rotation);
+            }
         }
         else
         {
@@ -87,51 +79,12 @@ public class BombWeapon : BaseWeapon
             Debug.LogError("[BombWeapon] Failed to spawn bomb!");
             return;
         }
-
         BaseProjectile bomb = bombObj.GetComponent<BaseProjectile>();
-        if (bomb == null)
+        if (bomb != null)
         {
-            Debug.LogError("[BombWeapon] Bomb does not have BaseProjectile component!");
-            return;
+            bomb.Initialize(player, explosionDamage, explosionKnockback, Vector2.zero);
+            Debug.Log($"[BombWeapon] Spawned bomb at {firePoint.position}");
         }
-
-        Vector2 throwDirection = CalculateThrowDirection();
-
-        bomb.Initialize(player, explosionDamage, explosionKnockback, throwDirection * throwForce);
-    }
-
-    private Vector2 CalculateThrowDirection()
-    {
-        float angleRad = throwAngle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-
-        if (player != null)
-        {
-            float facingDirection = Mathf.Sign(player.transform.localScale.x);
-            direction.x *= facingDirection;
-        }
-
-        return direction.normalized;
-    }
-
-    public void SetBombPrefab(BaseProjectile prefab)
-    {
-        bombPrefab = prefab;
-    }
-
-    public void SetThrowForce(float force)
-    {
-        throwForce = force;
-    }
-
-    public void SetThrowAngle(float angle)
-    {
-        throwAngle = angle;
-    }
-
-    public void SetExplosionRadius(float radius)
-    {
-        explosionRadius = radius;
     }
 }
 
