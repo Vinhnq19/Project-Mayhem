@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 5
   isBuff: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b7500576bb512ba488ef727cd6c5fd3e, type: 3}
   effectName: Double Ammo
   description: X2 Ammo in pick-up weapon
