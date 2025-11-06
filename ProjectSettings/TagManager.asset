@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Bullet
   - BombProjectile
-  - Bomb Projectile
   layers:
   - Default
   - TransparentFX
@@ -17,7 +16,7 @@ TagManager:
   - UI
   - Ground
   - Player
-  - 
+  - BombProjectile
   - 
   - 
   - 
@@ -48,12 +47,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Gun
-    uniqueID: 3141857185
-    locked: 0
   - name: Player
     uniqueID: 932256297
     locked: 0
   - name: Hand
-    uniqueID: 239113573
+    uniqueID: 1295021395
+    locked: 0
+  - name: Gun
+    uniqueID: 3141857185
+    locked: 0
+  - name: Effect
+    uniqueID: 3155987297
     locked: 0

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 7453846944240313230}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.658, y: 0.22, z: 0}
+  m_LocalPosition: {x: 3.436, y: 0.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77,20 +77,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7dde6ba2984d794d98aa90c8d95a283, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 5140065928392982526, guid: 85c850a0e8f9fb94896e70ea02b0a29c, type: 3}
+  firePoint: {fileID: 4167982558895120374}
+  projectileSpeed: 20
+  projectilesPerShot: 1
   baseDamage: 10
   baseKnockback: 5
   fireRate: 1
   maxAmmo: 10
   reloadTime: 2
   weaponData: {fileID: 11400000, guid: 0673ba78e5b4fa14990a1ae790e51d2f, type: 2}
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  emptySound: {fileID: 0}
-  projectilePrefab: {fileID: 5140065928392982526, guid: 85c850a0e8f9fb94896e70ea02b0a29c, type: 3}
-  firePoint: {fileID: 4167982558895120374}
-  projectileSpeed: 20
-  projectilesPerShot: 1
-  spreadAngle: 0
   objectPooler: {fileID: 0}
 --- !u!212 &4555371674679741338
 SpriteRenderer:

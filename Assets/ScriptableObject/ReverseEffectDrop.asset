@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cfbc5c69c41e444095a6497f330a96d, type: 3}
+  m_Name: ReverseEffectDrop
+  m_EditorClassIdentifier: 
+  dropType: 1
+  weaponData: {fileID: 0}
+  effectData: {fileID: 11400000, guid: bb345c35da5b0b94fbef331549338b31, type: 2}
+  spawnWeight: 1
+  dropIcon: {fileID: 0}
+  dropColor: {r: 1, g: 1, b: 1, a: 1}

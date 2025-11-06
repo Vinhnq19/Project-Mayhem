@@ -27,10 +27,10 @@ namespace ProjectMayhem.Player
         private bool canShoot = true;
 
         [Header("Bomb System (Special)")]
-        [SerializeField] private BombWeapon bombWeapon;  // Bomb prefab cố định cho player
+        [SerializeField] private BombWeapon bombWeaponPrefab;  // Bomb weapon prefab (như startingWeapon)
         [SerializeField] private int maxBombsPerLife = 3;  // Số bomb mỗi mạng
-        [SerializeField] private Transform bombSpawnPoint;  // Vị trí spawn bomb (optional)
 
+        private BombWeapon bombWeaponInstance;  // Instance đã tạo (như startingWeaponInstance)
         private int currentBombCount;
 
 
@@ -82,22 +82,17 @@ namespace ProjectMayhem.Player
         {
             currentBombCount = maxBombsPerLife;
 
-            // Setup bomb weapon if provided
-            if (bombWeapon != null)
+            if (bombWeaponPrefab != null && weaponHolder != null)
             {
-                bombWeapon.SetOwner(basePlayer);
+                bombWeaponInstance = Instantiate(bombWeaponPrefab, weaponHolder);
+                bombWeaponInstance.SetOwner(basePlayer);
+                bombWeaponInstance.gameObject.SetActive(true);  // Luôn active
                 
-                // Set spawn point for bomb if not specified
-                if (bombSpawnPoint == null && weaponHolder != null)
-                {
-                    bombSpawnPoint = weaponHolder;
-                }
-
-                Debug.Log($"[PlayerCombat] Player {playerID} initialized with {currentBombCount} bombs");
+                Debug.Log($"[PlayerCombat] Player {playerID} initialized bomb weapon with {currentBombCount} bombs");
             }
             else
             {
-                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon assigned!");
+                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon prefab assigned!");
             }
         }
 
@@ -389,14 +384,14 @@ namespace ProjectMayhem.Player
                 return;
             }
 
-            if (bombWeapon == null)
+            if (bombWeaponInstance == null)
             {
-                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon!");
+                Debug.LogWarning($"[PlayerCombat] Player {playerID} has no bomb weapon instance!");
                 return;
             }
 
-            // Throw bomb
-            ThrowBomb();
+            // Spawn bomb projectile (BombWeapon.Use() handles spawning)
+            bombWeaponInstance.Use();
 
             // Consume bomb count
             currentBombCount--;
@@ -405,26 +400,6 @@ namespace ProjectMayhem.Player
 
             // Emit event for UI update
             EventBus.Emit(GameEvent.BombUsed, basePlayer, currentBombCount);
-        }
-
-        private void ThrowBomb()
-        {
-            // Temporarily set bomb weapon position for throw
-            Vector3 originalPosition = bombWeapon.transform.position;
-            Quaternion originalRotation = bombWeapon.transform.rotation;
-
-            if (bombSpawnPoint != null)
-            {
-                bombWeapon.transform.position = bombSpawnPoint.position;
-                bombWeapon.transform.rotation = bombSpawnPoint.rotation;
-            }
-
-            // Use bomb weapon (will handle spawning, pooling, physics)
-            bombWeapon.Use();
-
-            // Restore position (if bomb weapon is not instantiated each time)
-            bombWeapon.transform.position = originalPosition;
-            bombWeapon.transform.rotation = originalRotation;
         }
 
         /// <summary>
