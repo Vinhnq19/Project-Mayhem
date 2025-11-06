@@ -19,8 +19,6 @@ namespace ProjectMayhem.Items
         [SerializeField] private Animator animator;
         [SerializeField] private ParticleSystem pickupEffect;
 
-        [Header("Audio Settings")]
-        [SerializeField] private AudioClip pickupSound;
 
         private bool isPickedUp = false;
         private Vector3 originalPosition;
@@ -88,27 +86,89 @@ namespace ProjectMayhem.Items
         {
             if (player == null || effectToApply == null) return;
 
-            PlayerEffectManager effectManager = player.EffectManager;
-            if (effectManager == null)
-            {
-                Debug.LogWarning($"[BaseItem] Player {player.PlayerID} has no PlayerEffectManager component");
-                return;
-            }
+            bool effectApplied = false;
 
-            bool effectApplied = effectManager.ApplyEffect(effectToApply);
+            switch (effectToApply.TargetType)
+            {
+                case EffectTargetType.Self:
+                    // Áp dụng lên người nhặt (buff bản thân)
+                    effectApplied = ApplyEffectToTarget(player);
+                    if (effectApplied)
+                    {
+                        Debug.Log($"[BaseItem] Player {player.PlayerID} picked up SELF effect: {effectToApply.EffectName}");
+                    }
+                    break;
+
+                case EffectTargetType.Others:
+                    // Áp dụng lên tất cả người khác (không phải người nhặt)
+                    BasePlayer[] allPlayers = FindObjectsOfType<BasePlayer>();
+                    int affectedCount = 0;
+                    
+                    foreach (BasePlayer targetPlayer in allPlayers)
+                    {
+                        // Bỏ qua người nhặt
+                        if (targetPlayer.PlayerID == player.PlayerID) continue;
+
+                        if (ApplyEffectToTarget(targetPlayer))
+                        {
+                            affectedCount++;
+                        }
+                    }
+
+                    effectApplied = affectedCount > 0;
+                    if (effectApplied)
+                    {
+                        Debug.Log($"[BaseItem] Player {player.PlayerID} picked up OTHERS effect: {effectToApply.EffectName} - Affected {affectedCount} players");
+                    }
+                    break;
+
+                // case EffectTargetType.AllPlayers:
+                //     // Áp dụng lên tất cả người chơi (bao gồm cả người nhặt)
+                //     BasePlayer[] allPlayersIncludingSelf = FindObjectsOfType<BasePlayer>();
+                //     int totalAffected = 0;
+                    
+                //     foreach (BasePlayer targetPlayer in allPlayersIncludingSelf)
+                //     {
+                //         if (ApplyEffectToTarget(targetPlayer))
+                //         {
+                //             totalAffected++;
+                //         }
+                //     }
+
+                //     effectApplied = totalAffected > 0;
+                //     if (effectApplied)
+                //     {
+                //         Debug.Log($"[BaseItem] Player {player.PlayerID} picked up ALL PLAYERS effect: {effectToApply.EffectName} - Affected {totalAffected} players");
+                //     }
+                //     break;
+            }
             
             if (effectApplied)
             {
                 PlayPickupEffects();
-
                 HandleItemPickup();
-
-                Debug.Log($"[BaseItem] Player {player.PlayerID} picked up {effectToApply.EffectName}");
             }
             else
             {
-                Debug.LogWarning($"[BaseItem] Failed to apply effect {effectToApply.EffectName} to Player {player.PlayerID}");
+                Debug.LogWarning($"[BaseItem] Failed to apply effect {effectToApply.EffectName}");
             }
+        }
+
+        /// <summary>
+        /// Áp dụng effect lên một player cụ thể
+        /// </summary>
+        private bool ApplyEffectToTarget(BasePlayer targetPlayer)
+        {
+            if (targetPlayer == null) return false;
+
+            PlayerEffectManager effectManager = targetPlayer.EffectManager;
+            if (effectManager == null)
+            {
+                Debug.LogWarning($"[BaseItem] Player {targetPlayer.PlayerID} has no PlayerEffectManager component");
+                return false;
+            }
+
+            return effectManager.ApplyEffect(effectToApply);
         }
 
         private void HandleItemPickup()
@@ -132,11 +192,11 @@ namespace ProjectMayhem.Items
 
         private void PlayPickupEffects()
         {
-            if (pickupSound != null)
-            {
-                // EventBus.Raise(new PlaySoundEvent(pickupSound, transform.position));
-                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-            }
+            // if (pickupSound != null)
+            // {
+            //     // EventBus.Raise(new PlaySoundEvent(pickupSound, transform.position));
+            //     AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            // }
 
             if (pickupEffect != null)
             {
@@ -222,10 +282,10 @@ namespace ProjectMayhem.Items
             return !isPickedUp && effectToApply != null;
         }
 
-        public void SetPickupSound(AudioClip sound)
-        {
-            pickupSound = sound;
-        }
+        // public void SetPickupSound(AudioClip sound)
+        // {
+        //     pickupSound = sound;
+        // }
 
         public void SetPickupEffect(ParticleSystem effect)
         {

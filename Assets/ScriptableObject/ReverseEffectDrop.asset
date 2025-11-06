@@ -16,5 +16,5 @@ MonoBehaviour:
   weaponData: {fileID: 0}
   effectData: {fileID: 11400000, guid: bb345c35da5b0b94fbef331549338b31, type: 2}
   spawnWeight: 1
-  dropIcon: {fileID: 0}
+  dropIcon: {fileID: 21300000, guid: ff87003da810f8941a13170bcaa1f6a9, type: 3}
   dropColor: {r: 1, g: 1, b: 1, a: 1}
