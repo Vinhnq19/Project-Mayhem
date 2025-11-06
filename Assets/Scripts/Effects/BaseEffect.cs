@@ -3,11 +3,21 @@ using ProjectMayhem.Player;
 
 namespace ProjectMayhem.Effects
 {
+    /// <summary>
+    /// Xác định đối tượng mục tiêu của hiệu ứng
+    /// </summary>
+    public enum EffectTargetType
+    {
+        Self,
+        Others
+    }
+
     public abstract class BaseEffect : ScriptableObject
     {
         [Header("Effect Settings")]
         [SerializeField] protected float duration = 5f;
         [SerializeField] protected bool isBuff = true;
+        [SerializeField] protected EffectTargetType targetType = EffectTargetType.Self;
         [SerializeField] protected Sprite icon;
         [SerializeField] protected string effectName = "Effect";
         [SerializeField] protected string description = "Effect description";
@@ -20,6 +30,7 @@ namespace ProjectMayhem.Effects
         // Properties
         public float Duration => duration;
         public bool IsBuff => isBuff;
+        public EffectTargetType TargetType => targetType;
         public Sprite Icon => icon;
         public string EffectName => effectName;
         public string Description => description;
@@ -109,6 +120,7 @@ namespace ProjectMayhem.Effects
             BaseEffect copy = CreateInstance(GetType()) as BaseEffect;
             copy.duration = duration;
             copy.isBuff = isBuff;
+            copy.targetType = targetType;
             copy.icon = icon;
             copy.effectName = effectName;
             copy.description = description;

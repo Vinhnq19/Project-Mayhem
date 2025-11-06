@@ -1115,11 +1115,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnInterval: 5
-  maxItemsInScene: 1
+  maxItemsInScene: 2
   autoSpawn: 1
   itemPrefab: {fileID: 8506013804213557209, guid: a612fccee512a91449200e0aeee5ec9e, type: 3}
   possibleDrops:
+  - {fileID: 11400000, guid: d16368512d5a3a3438c6e893ebea5598, type: 2}
   - {fileID: 11400000, guid: 2aedbfeb2aa2a154eb4806457226d49e, type: 2}
+  - {fileID: 11400000, guid: a42ea44b4021da743a1639f4a6f12b46, type: 2}
+  - {fileID: 11400000, guid: 4e6dc02879162fd498f2ba0fe522ce97, type: 2}
+  - {fileID: 11400000, guid: 209f5f309f7201f4f87d01b708ee5267, type: 2}
+  - {fileID: 11400000, guid: 8ceef5b1ed749a34c8c156bf845a7f86, type: 2}
+  - {fileID: 11400000, guid: 0700a14233be85748b1b9e5000bb34b1, type: 2}
   spawnPoints:
   - {fileID: 892541865}
   - {fileID: 1522683921}

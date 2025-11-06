@@ -9,7 +9,7 @@ namespace ProjectMayhem.Effects
         protected override void OnApply(BasePlayer player)
         {
             if (player == null || player.Combat == null) return;
-            player.Combat.SetCanShoot(false);  // PlayerCombat đã có method này!
+            player.Combat.SetCanShoot(false);
             Debug.Log($"[SilenceEffect] Player {player.PlayerID} silenced");
         }
         

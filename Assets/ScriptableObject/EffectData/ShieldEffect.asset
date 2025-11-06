@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 5
   isBuff: 1
-  icon: {fileID: 0}
+  targetType: 0
+  icon: {fileID: 21300000, guid: de3d342979450ab4ab296b0c04a619a6, type: 3}
   effectName: Shield Effect
-  description: Shield reduce knockback and damage
-  shieldVisualPrefab: {fileID: 0}
+  description: Shield ignore knockback and damage
+  shieldVisualPrefab: {fileID: 7977554379040834462, guid: 4ca006971b31bb84f890683c4d732189, type: 3}
