@@ -36,14 +36,11 @@ public class BombWeapon : BaseWeapon
             bombPrefab = data.projectilePrefab;
             explosionDamage = data.baseDamage;
             explosionKnockback = data.baseKnockback;
-
-            Debug.Log($"[BombWeapon] Loaded data: {data.weaponName}");
         }
     }
 
     public override void Use()
     {
-        // Không check fire rate - có thể spawn bomb liên tục
         SpawnBomb();
     }
 
@@ -55,14 +52,11 @@ public class BombWeapon : BaseWeapon
             return;
         }
 
-        // Spawn bomb từ pool hoặc Instantiate
         GameObject bombObj = null;
         
         if (objectPooler != null && !string.IsNullOrEmpty(bombPoolTag))
         {
             bombObj = objectPooler.SpawnFromPool(bombPoolTag, firePoint.position, firePoint.rotation);
-            
-            // Tự động tạo pool nếu chưa có
             if (bombObj == null)
             {
                 objectPooler.AddPool(bombPoolTag, bombPrefab.gameObject, 5);

@@ -15,12 +15,12 @@ namespace ProjectMayhem.Projectiles
         [SerializeField] private float explosionDelay = 2f;
         [SerializeField] private float explosionRadius = 3f;
         [SerializeField] private LayerMask playerLayer;
-        [SerializeField] private GameObject explosionEffectPrefab;  // GameObject chứa ParticleSystem
-        [SerializeField] private Vector2 explosionEffectOffset = new Vector2(0f, 0.5f);  // Offset vị trí effect (Y+ = lên)
+        [SerializeField] private GameObject explosionEffectPrefab;
+        [SerializeField] private Vector2 explosionEffectOffset = new Vector2(0f, 0.5f);
 
         private bool hasLanded = false;
-        private bool hasExploded = false;  // Đã nổ chưa
-        private float explosionTimer = 0f;  // Đếm thời gian đến khi nổ 
+        private bool hasExploded = false;
+        private float explosionTimer = 0f;
 
         protected override void Awake()
         {
@@ -28,10 +28,9 @@ namespace ProjectMayhem.Projectiles
             rb = GetComponent<Rigidbody2D>();
             projectileCollider = GetComponent<Collider2D>();
 
-            // Setup rigidbody cho bomb (có vật lý)
             rb.gravityScale = bombGravityScale;
             rb.drag = 0f;
-            rb.angularDrag = 0.05f;  // Xoay nhẹ khi rơi
+            rb.angularDrag = 0.05f;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             projectileCollider.isTrigger = false;
 
@@ -52,7 +51,7 @@ namespace ProjectMayhem.Projectiles
             currentLifetime = lifetime;
             hasLanded = false;
             hasExploded = false;
-            explosionTimer = explosionDelay;  // Bắt đầu đếm ngược
+            explosionTimer = explosionDelay;
 
             // Enable trail if present
             if (trailRenderer != null)
@@ -61,15 +60,13 @@ namespace ProjectMayhem.Projectiles
             Debug.Log($"[BombProjectile] Initialized - Will explode in {explosionDelay}s");
         }
 
-        // Vật lý collision với đất/obstacles (không phải trigger)
+        // Vật lý collision với đất/obstacles
         private void OnCollisionEnter2D(Collision2D collision)
         {
             // Check nếu chạm đất
             if (IsGround(collision.gameObject))
             {
                 hasLanded = true;
-                
-                // Giảm velocity khi chạm đất (bounce nhẹ hoặc dừng)
                 rb.velocity *= bounceForce;
 
                 Debug.Log($"[BombProjectile] Landed on ground: {collision.gameObject.name}");
@@ -80,8 +77,6 @@ namespace ProjectMayhem.Projectiles
         // Chỉ gây damage khi NỔ (explosion)
         protected override void OnTriggerEnter2D(Collider2D other)
         {
-            // Bomb không phản ứng với trigger collision
-            // Chỉ nổ theo timer hoặc điều kiện khác
         }
 
         private bool IsGround(GameObject obj)
@@ -99,7 +94,6 @@ namespace ProjectMayhem.Projectiles
             currentLifetime -= Time.deltaTime;
             if (currentLifetime <= 0f)
             {
-                // Hết lifetime → Nổ luôn
                 if (!hasExploded)
                 {
                     Explode();
@@ -138,13 +132,11 @@ namespace ProjectMayhem.Projectiles
             {
                 BasePlayer player = col.GetComponent<BasePlayer>();
                 if (player == null) continue;
-
-                // Bỏ qua owner nếu ignoreOwner = true
                 if (ignoreOwner && player == owner) continue;
 
                 // Tính khoảng cách để scale damage/knockback
                 float distance = Vector2.Distance(transform.position, player.transform.position);
-                float distanceRatio = 1f - (distance / explosionRadius);  // 1.0 ở tâm, 0.0 ở rìa
+                float distanceRatio = 1f - (distance / explosionRadius);
 
                 // Scale damage và knockback theo khoảng cách
                 float scaledDamage = damage * distanceRatio;

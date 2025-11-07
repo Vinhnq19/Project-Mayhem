@@ -54,7 +54,6 @@ namespace ProjectMayhem.Weapons
             }
             else
             {
-
                 currentAmmo = maxAmmo;
                 lastFireTime = 0f;
                 isReloading = false;

@@ -1114,8 +1114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e915a365b03f224aa7614ee416c3b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnInterval: 5
-  maxItemsInScene: 2
+  spawnInterval: 10
+  maxItemsInScene: 1
   autoSpawn: 1
   itemPrefab: {fileID: 8506013804213557209, guid: a612fccee512a91449200e0aeee5ec9e, type: 3}
   possibleDrops:
