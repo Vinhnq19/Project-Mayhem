@@ -11804,7 +11804,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 1
+  m_text: Player 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c480cbfc3d7e02446ac8a8846833235e, type: 2}
   m_sharedMaterial: {fileID: -4713990719206054429, guid: c480cbfc3d7e02446ac8a8846833235e, type: 2}
