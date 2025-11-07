@@ -19,18 +19,18 @@ namespace ProjectMayhem.Player
         [SerializeField] private float knockbackResistance = 1f;
 
         [Header("Weapon System")]
-        [SerializeField] private Transform weaponHolder;  // Vị trí gắn weapon (child của player)
-        [SerializeField] private BaseWeapon startingWeapon;  // Weapon ban đầu (optional)
+        [SerializeField] private Transform weaponHolder;
+        [SerializeField] private BaseWeapon startingWeapon;
 
         private BaseWeapon currentWeapon;
-        private BaseWeapon startingWeaponInstance;  // Keep reference to instantiated starting weapon
+        private BaseWeapon startingWeaponInstance;
         private bool canShoot = true;
 
         [Header("Bomb System (Special)")]
-        [SerializeField] private BombWeapon bombWeaponPrefab;  // Bomb weapon prefab (như startingWeapon)
-        [SerializeField] private int maxBombsPerLife = 3;  // Số bomb mỗi mạng
+        [SerializeField] private BombWeapon bombWeaponPrefab;
+        [SerializeField] private int maxBombsPerLife = 3;
 
-        private BombWeapon bombWeaponInstance;  // Instance đã tạo (như startingWeaponInstance)
+        private BombWeapon bombWeaponInstance;
         private int currentBombCount;
 
 
