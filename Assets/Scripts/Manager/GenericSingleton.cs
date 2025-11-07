@@ -40,7 +40,7 @@ namespace ProjectMayhem.Manager
                             _instance = singleton.AddComponent<T>();
                             singleton.name = $"[Singleton] {typeof(T).ToString()}";
 
-                            DontDestroyOnLoad(singleton);
+                            // DontDestroyOnLoad(singleton);
 
                             Debug.Log($"[GenericSingleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
                         }
