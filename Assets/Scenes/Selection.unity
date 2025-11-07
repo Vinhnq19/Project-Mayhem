@@ -797,7 +797,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 476356249}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3170193461307140405, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
+        m_TargetAssemblyTypeName: SceneTransitor, Assembly-CSharp
+        m_MethodName: OnNextScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &476356249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10949,7 +10961,7 @@ MonoBehaviour:
   m_Intensity: 2
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 975054e800000000
+  m_ApplyToSortingLayers: 975054e800000000033789486bdee6a9
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0

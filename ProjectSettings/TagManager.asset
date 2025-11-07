@@ -44,6 +44,9 @@ TagManager:
   - name: Background
     uniqueID: 3897839767
     locked: 0
+  - name: Particle
+    uniqueID: 1109376203
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
@@ -58,4 +61,10 @@ TagManager:
     locked: 0
   - name: Effect
     uniqueID: 3155987297
+    locked: 0
+  - name: UI
+    uniqueID: 2850479723
+    locked: 0
+  - name: Transition
+    uniqueID: 1216952067
     locked: 0

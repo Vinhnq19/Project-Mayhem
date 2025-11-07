@@ -6,7 +6,7 @@ namespace ProjectMayhem.Manager
 
     public enum GameState
     {
-        MainMenu,
+        Start,
         Playing,
         Paused,
         GameOver
@@ -25,7 +25,7 @@ namespace ProjectMayhem.Manager
         [SerializeField] private int player2Score;
 
         // Game state
-        private GameState currentGameState = GameState.MainMenu;
+        private GameState currentGameState = GameState.Start;
         private float currentRoundTime;
         private BasePlayer winner;
 
@@ -41,6 +41,7 @@ namespace ProjectMayhem.Manager
         protected override void Awake()
         {
             base.Awake();
+            DontDestroyOnLoad(this.gameObject);
             InitializeGame();
         }
 
@@ -74,7 +75,7 @@ namespace ProjectMayhem.Manager
             player1Score = 0;
             player2Score = 0;
             currentRoundTime = roundTimeLimit;
-            currentGameState = GameState.MainMenu;
+            currentGameState = GameState.Start;
         }
 
         public void StartGame()
