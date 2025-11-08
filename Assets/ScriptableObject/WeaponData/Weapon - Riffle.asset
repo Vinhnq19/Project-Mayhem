@@ -17,7 +17,7 @@ MonoBehaviour:
   weaponType: 0
   baseDamage: 15
   baseKnockback: 10
-  fireRate: 10
+  fireRate: 7
   maxAmmo: 30
   reloadTime: 2
   infiniteAmmo: 0

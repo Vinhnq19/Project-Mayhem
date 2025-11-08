@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Bullet
   - BombProjectile
+  - BulletShotgun
   layers:
   - Default
   - TransparentFX
