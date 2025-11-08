@@ -91,6 +91,8 @@ namespace ProjectMayhem.Utilities
 
             GameObject objectToSpawn = poolDictionary[tag].Dequeue();
 
+            ResetObjectState(objectToSpawn);
+
             if (objectToSpawn == null)
             {
                 Pool poolData = poolDataDictionary[tag];
