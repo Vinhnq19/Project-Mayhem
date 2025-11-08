@@ -17462,6 +17462,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6730506161351491085, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+      propertyPath: dropDownTime
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730506161351491085, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: doubleJumpForce
       value: 15
       objectReference: {fileID: 0}
@@ -18391,6 +18395,10 @@ PrefabInstance:
     - target: {fileID: 6730506161351491085, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: jumpForce
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730506161351491085, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
+      propertyPath: dropDownTime
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 7726833952310082915, guid: b901c1df7c1a5fd48a3a1f183badfd88, type: 3}
       propertyPath: m_SortingLayer
