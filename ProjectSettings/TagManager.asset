@@ -54,11 +54,11 @@ TagManager:
   - name: Player
     uniqueID: 932256297
     locked: 0
-  - name: Hand
-    uniqueID: 1295021395
-    locked: 0
   - name: Gun
     uniqueID: 3141857185
+    locked: 0
+  - name: Hand
+    uniqueID: 1295021395
     locked: 0
   - name: Effect
     uniqueID: 3155987297
