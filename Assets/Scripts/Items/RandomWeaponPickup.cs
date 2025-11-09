@@ -349,7 +349,7 @@ namespace ProjectMayhem.Items
 
         private void DestroyItem()
         {
-            Destroy(gameObject, 0.5f);  // Delay để effect kịp play
+            Destroy(gameObject);
         }
 
         private void RespawnItem()
