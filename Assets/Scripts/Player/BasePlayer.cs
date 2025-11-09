@@ -14,6 +14,9 @@ namespace ProjectMayhem.Player
         [SerializeField] private int playerID = 1;
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float speedMultiplier = 1.0f;
+        
+        [Header("Platform Drop Settings")]
+        [SerializeField] private LayerMask droppablePlatformLayerMask; 
         [SerializeField] private LayerMask groundLayerMask = 1;
 
         [Header("Jump Settings")]
@@ -311,7 +314,7 @@ namespace ProjectMayhem.Player
                 0f,
                 Vector2.down,
                 0.2f,
-                groundLayerMask
+                droppablePlatformLayerMask
             );
 
             if (boxHit.collider != null)
@@ -329,8 +332,8 @@ namespace ProjectMayhem.Player
                     transform.position,
                     Vector2.down,
                     capsuleCollider.size.y / 2f + 0.1f,
-                    groundLayerMask
-                );
+                    droppablePlatformLayerMask
+                    );
 
                 if (hit.collider != null)
                 {
