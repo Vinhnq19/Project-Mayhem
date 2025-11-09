@@ -80,8 +80,8 @@ MonoBehaviour:
   firePoint: {fileID: 6481639690684291782}
   projectileSpeed: 20
   projectilesPerShot: 1
-  baseDamage: 10
-  baseKnockback: 5
+  baseDamage: 20
+  baseKnockback: 20
   fireRate: 1
   maxAmmo: 10
   reloadTime: 2
