@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3dc341151a42ec44c874ee7f8b5f369e
+guid: 31a712f85075be343a992e5a9c481789
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -98,7 +98,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638982404328214911
+  platformSettingsDirtyTick: 638983230949999343
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -122,18 +122,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Bullet
+  - name: Crown
     originalName: 
-    pivot: {x: 0.5555556, y: -16}
+    pivot: {x: 0.54545456, y: -2.1666667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 9
-      height: 1
-    spriteID: ccfcb9d436a80534280ac1fe75d0e447
+      width: 11
+      height: 6
+    spriteID: cde7eedf6b6fccb45910f7369ea50bfe
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -146,25 +146,25 @@ ScriptedImporter:
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 3318194134
+      value0: 1091143495
       value1: 0
       value2: 0
       value3: 0
     guid: 0
-    name: Bullet
+    name: Crown
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Bullet
+    - name: Crown
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 11
-        y: 16
-        width: 9
-        height: 1
-      spriteId: ccfcb9d436a80534280ac1fe75d0e447
+        x: 10
+        y: 13
+        width: 11
+        height: 6
+      spriteId: cde7eedf6b6fccb45910f7369ea50bfe
     linkedCells: []
     parentIndex: -1
   platformSettings:

@@ -32,7 +32,7 @@ namespace ProjectMayhem.Player
         private BombWeapon bombWeaponInstance;
         private int currentBombCount;
 
-
+        public int lives;
 
         // Combat state
         private float currentDamagePercent = 0f;
@@ -75,6 +75,8 @@ namespace ProjectMayhem.Player
 
             // Initialize bomb system
             InitializeBombSystem();
+
+            lives = GameData.Instance.playerLife;
         }
 
         private void InitializeBombSystem()
@@ -119,8 +121,13 @@ namespace ProjectMayhem.Player
         {
             if (collision.gameObject.CompareTag("DieBound"))
             {
-                EventBus.Emit("PlayerDie" + this.playerID);
-                transform.position = new Vector3(0f, 28f, 0f);
+                EventBus.Emit("PlayerDie" + this.playerID, --lives);
+                if (lives <= 0)
+                {
+                    EventBus.Emit("Lose", this.playerID);
+                    return;
+                }
+                transform.position = new Vector3(0f, 50f, 0f);
                 EquipStartingWeapon();
                 CurrentWeapon.ForceReload();
             }

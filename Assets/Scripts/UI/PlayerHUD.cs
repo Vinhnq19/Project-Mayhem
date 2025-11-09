@@ -32,6 +32,11 @@ public class PlayerHUD : MonoBehaviour
         {
             avatar.color = GameData.Instance.player2Color;
         }
+        UpdateLife(GameData.Instance.playerLife);
+
+        updateLife = (amount) => UpdateLife(amount);
+
+        EventBus.On("PlayerDie" + this.player.PlayerID, updateLife);
     }
 
     private void UpdateLife(int amount)
@@ -57,7 +62,7 @@ public class PlayerHUD : MonoBehaviour
 
     void OnDestroy()
     {
-
+        EventBus.Off("PlayerDie" + this.player.PlayerID, updateLife);
     }
 }
 //
