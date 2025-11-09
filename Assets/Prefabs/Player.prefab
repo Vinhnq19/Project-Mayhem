@@ -184,7 +184,6 @@ GameObject:
   - component: {fileID: 4257615565187299057}
   - component: {fileID: 1752643949145763827}
   - component: {fileID: 5600755669479409891}
-  - component: {fileID: 8426096465869653710}
   - component: {fileID: 6704143568639267425}
   - component: {fileID: 2024879664626286467}
   - component: {fileID: 1754733611058617706}
@@ -290,9 +289,12 @@ MonoBehaviour:
   playerID: 1
   moveSpeed: 5
   speedMultiplier: 1
-  groundLayerMask:
+  droppablePlatformLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 576
   jumpForce: 15
   enableDoubleJump: 1
   doubleJumpForce: 15
@@ -350,24 +352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21404d50cb21b684dacadc8f48dc991a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8426096465869653710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2321542129095750881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5505b69978f361489607db3f01cb9ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showGizmos: 1
-  groundedColor: {r: 0, g: 1, b: 0, a: 1}
-  notGroundedColor: {r: 1, g: 0, b: 0, a: 1}
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!95 &6704143568639267425
 Animator:
   serializedVersion: 5
