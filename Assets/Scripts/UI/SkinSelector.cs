@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class SkinSelector : MonoBehaviour
 {
+    [SerializeField] private int id;
     [SerializeField] private int grid = 4;
     [SerializeField] private Vector2 firstPosition;
     [SerializeField] private Vector2 offset;
@@ -59,6 +60,14 @@ public class SkinSelector : MonoBehaviour
 
     private void OnColorSelected(int index)
     {
+        if (id == 1)
+        {
+            GameData.Instance.SetPlayer1Color(colors[index]);
+        }
+        else
+        {
+            GameData.Instance.SetPlayer2Color(colors[index]);
+        }
         skinImage.color = colors[index];
     }
 }
