@@ -109,6 +109,11 @@ namespace ProjectMayhem.Weapons
             Debug.Log($"[BaseWeapon] {GetType().Name} reloaded. Ammo: {currentAmmo}/{maxAmmo}");
         }
 
+        public void ForceReload()
+        {
+            currentAmmo = maxAmmo;
+        }
+
         protected virtual void TryAutoReload()
         {
             // Only auto-reload for starting weapon

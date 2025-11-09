@@ -115,6 +115,17 @@ namespace ProjectMayhem.Player
             // }
         }
 
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("DieBound"))
+            {
+                EventBus.Emit("PlayerDie" + this.playerID);
+                transform.position = new Vector3(0f, 28f, 0f);
+                EquipStartingWeapon();
+                CurrentWeapon.ForceReload();
+            }
+        }
+
         private void EquipStartingWeapon()
         {
             if (startingWeapon == null || weaponHolder == null) return;
