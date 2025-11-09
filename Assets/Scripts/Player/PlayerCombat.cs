@@ -2,7 +2,6 @@ using UnityEngine;
 using ProjectMayhem.Manager;
 using ProjectMayhem.Player;
 using ProjectMayhem.Weapons;
-using System;
 
 namespace ProjectMayhem.Player
 {
@@ -240,7 +239,8 @@ namespace ProjectMayhem.Player
             // Destroy current pickup weapon
             if (currentWeapon != null && currentWeapon != startingWeaponInstance)
             {
-                Destroy(currentWeapon.gameObject);
+                // Destroy(currentWeapon.gameObject);
+                DropWeapon(currentWeapon);
             }
 
             // Switch to starting weapon
@@ -316,6 +316,25 @@ namespace ProjectMayhem.Player
             rb.AddForce(adjustedForce, ForceMode2D.Impulse);
 
             Debug.Log($"[PlayerCombat] Player {playerID} received knockback force: {adjustedForce}");
+        }
+
+        //Drop weapon
+        private void DropWeapon(BaseWeapon weaponToDrop)
+        {
+            if (weaponToDrop == null) return;
+            weaponToDrop.transform.SetParent(null);
+            Rigidbody2D weaponRb = weaponToDrop.GetComponent<Rigidbody2D>();
+            if (weaponRb == null)
+                weaponRb = weaponToDrop.gameObject.AddComponent<Rigidbody2D>();
+            weaponRb.gravityScale = 3f;
+            weaponRb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; //fast moving objects
+
+            float throwDirection = basePlayer.transform.localEulerAngles.y == 180f ? -1f : 1f;
+            Vector2 throwForce = new Vector2(throwDirection * 5f, 10f);
+            weaponRb.AddForce(throwForce, ForceMode2D.Impulse);
+            weaponRb.angularVelocity = Random.Range(-360f, 360f);
+
+            Destroy(weaponToDrop.gameObject, 3f);
         }
 
         public float GetKnockbackMultiplier()
