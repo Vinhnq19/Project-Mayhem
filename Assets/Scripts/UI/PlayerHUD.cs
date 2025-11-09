@@ -1,42 +1,56 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
+using ProjectMayhem.Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerHUD
+public class PlayerHUD : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI damageText;
-    [SerializeField] private TextMeshProUGUI livesText;
+    public int id;
+
+    [SerializeField] private TextMeshProUGUI lifeText;
     [SerializeField] private TextMeshProUGUI ammoText;
 
-    public PlayerHUD(TextMeshProUGUI damageText, TextMeshProUGUI livesText, TextMeshProUGUI ammoText)
+    [SerializeField] private UnityEngine.UI.Image avatar;
+    [SerializeField] private BasePlayer player;
+    private PlayerCombat playerCombat;
+
+    private Action<int> updateLife;
+    private Action<int> updateAmmo;
+    // Start is called before the first frame update
+    void Start()
     {
-        this.damageText = damageText;
-        this.livesText = livesText;
-        this.ammoText = ammoText;
-    }
-    public void UpdateDamageText(float damagePercent)
-    {
-        if (damageText != null)
-        {
-            damageText.text = $"Damage: {Mathf.FloorToInt(damagePercent)}%";
-        } 
+        playerCombat = player.GetComponent<PlayerCombat>();
+
     }
 
-    public void UpdateLivesText(int livesRemaining)
+    private void UpdateLife(int amount)
     {
-        if (livesText != null)
-        {
-            livesText.text = $"Lives: {livesRemaining}";
-        }
-    }
-    public void UpdateAmmoText(int currentAmmo, int maxAmmo)
-    {
-        if (ammoText != null)
-        {
-            ammoText.text = $"Ammo: {currentAmmo}/{maxAmmo}";
-        }
+        lifeText.text = amount + "";
     }
 
+    private void UpdateAmmo(int amount)
+    {
+        ammoText.text = amount + "";
+    }
+
+    private void UpdateAvator(int color)
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        ammoText.text = playerCombat.CurrentWeapon.CurrentAmmo.ToString();
+    }
+
+    void OnDestroy()
+    {
+
+    }
 }
+//

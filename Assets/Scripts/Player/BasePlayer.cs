@@ -175,6 +175,15 @@ namespace ProjectMayhem.Player
             HandleContinuousShooting();  // Handle continuous shooting when button is held
         }
 
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+            if(collision.gameObject.CompareTag("DieBound"))
+            {
+                EventBus.Emit("PlayerDie" + this.playerID);
+                transform.position = new Vector3(0f, 28f, 0f);
+            }
+        }
+
         private void LateUpdate()
         {
             jumpInputPressed = false;

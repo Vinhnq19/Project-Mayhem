@@ -87,7 +87,7 @@ namespace ProjectMayhem.Player
                 bombWeaponInstance = Instantiate(bombWeaponPrefab, weaponHolder);
                 bombWeaponInstance.SetOwner(basePlayer);
                 bombWeaponInstance.gameObject.SetActive(true);  // Luôn active
-                
+
                 Debug.Log($"[PlayerCombat] Player {playerID} initialized bomb weapon with {currentBombCount} bombs");
             }
             else
@@ -127,10 +127,10 @@ namespace ProjectMayhem.Player
                 {
                     currentWeapon.gameObject.SetActive(false);
                 }
-                
+
                 startingWeaponInstance.gameObject.SetActive(true);
                 currentWeapon = startingWeaponInstance;
-                
+
                 Debug.Log($"[PlayerCombat] Player {playerID} switched back to starting weapon");
             }
             else
@@ -140,7 +140,7 @@ namespace ProjectMayhem.Player
                 startingWeaponInstance.SetOwner(basePlayer);
                 startingWeaponInstance.SetAsStartingWeapon(true);
                 currentWeapon = startingWeaponInstance;
-                
+
                 Debug.Log($"[PlayerCombat] Player {playerID} equipped starting weapon: {startingWeapon.name}");
             }
 
@@ -212,8 +212,8 @@ namespace ProjectMayhem.Player
                 currentWeapon.Use();
 
                 // Check if pickup weapon is out of ammo (not starting weapon)
-                if (currentWeapon != startingWeaponInstance && 
-                    currentWeapon.CurrentAmmo <= 0 && 
+                if (currentWeapon != startingWeaponInstance &&
+                    currentWeapon.CurrentAmmo <= 0 &&
                     !currentWeapon.IsReloading)
                 {
                     Debug.Log($"[PlayerCombat] Player {playerID} pickup weapon out of ammo, switching to starting weapon");

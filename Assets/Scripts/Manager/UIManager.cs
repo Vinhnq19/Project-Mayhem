@@ -17,7 +17,7 @@ namespace ProjectMayhem.Manager
 
         #endregion
 
-        [SerializeField] private List<PlayerHUD> playerHUDs;
+        // [SerializeField] private List<PlayerHUD> playerHUDs;
         [SerializeField] private TextMeshProUGUI winnerText;
 
         protected override void Awake()
@@ -51,22 +51,22 @@ namespace ProjectMayhem.Manager
         {
             int playerIndex = e.playerID - 1;
 
-            if (playerIndex >= 0 && playerIndex < playerHUDs.Count)
-            {
-                playerHUDs[playerIndex].UpdateDamageText(e.newDamagePercent);
-                Debug.Log($"[UIManager] Updated damage for Player {e.playerID}: {e.newDamagePercent}%");
-            }
+            // if (playerIndex >= 0 && playerIndex < playerHUDs.Count)
+            // {
+            //     playerHUDs[playerIndex].UpdateDamageText(e.newDamagePercent);
+            //     Debug.Log($"[UIManager] Updated damage for Player {e.playerID}: {e.newDamagePercent}%");
+            // }
         }
 
         private void OnPlayerLivesUpdated(PlayerLivesUpdatedEvent e)
         {
             int playerIndex = e.playerID - 1;
 
-            if (playerIndex >= 0 && playerIndex < playerHUDs.Count)
-            {
-                playerHUDs[playerIndex].UpdateLivesText(e.newLives);
-                Debug.Log($"[UIManager] Updated lives for Player {e.playerID}: {e.newLives}");
-            }
+            // if (playerIndex >= 0 && playerIndex < playerHUDs.Count)
+            // {
+            //     playerHUDs[playerIndex].UpdateLivesText(e.newLives);
+            //     Debug.Log($"[UIManager] Updated lives for Player {e.playerID}: {e.newLives}");
+            // }
         }
 
         public void ShowMainMenu()
@@ -96,15 +96,15 @@ namespace ProjectMayhem.Manager
         public void UpdatePlayerHUD(int playerIndex, float damagePercent, int livesRemaining, int currentAmmo,
             int maxAmmo)
         {
-            if (playerIndex < 0 || playerIndex >= playerHUDs.Count)
-            {
-                Debug.LogError("Invalid player index for HUD update.");
-                return;
-            }
+            // if (playerIndex < 0 || playerIndex >= playerHUDs.Count)
+            // {
+            //     Debug.LogError("Invalid player index for HUD update.");
+            //     return;
+            // }
 
-            playerHUDs[playerIndex].UpdateDamageText(damagePercent);
-            playerHUDs[playerIndex].UpdateLivesText(livesRemaining);
-            playerHUDs[playerIndex].UpdateAmmoText(currentAmmo, maxAmmo);
+            // playerHUDs[playerIndex].UpdateDamageText(damagePercent);
+            // playerHUDs[playerIndex].UpdateLivesText(livesRemaining);
+            // playerHUDs[playerIndex].UpdateAmmoText(currentAmmo, maxAmmo);
         }
     }
 }
