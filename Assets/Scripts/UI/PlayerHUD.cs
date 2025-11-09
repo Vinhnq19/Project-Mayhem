@@ -24,7 +24,14 @@ public class PlayerHUD : MonoBehaviour
     void Start()
     {
         playerCombat = player.GetComponent<PlayerCombat>();
-
+        if (player.PlayerID == 1)
+        {
+            avatar.color = GameData.Instance.player1Color;
+        }
+        else
+        {
+            avatar.color = GameData.Instance.player2Color;
+        }
     }
 
     private void UpdateLife(int amount)

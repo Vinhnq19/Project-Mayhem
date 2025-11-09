@@ -10391,14 +10391,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 380fcee657f6a5d4fb84d793caa6982d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10567,7 +10567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3170193461307140405, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
       propertyPath: scenes.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3170193461307140405, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
       propertyPath: scenes.Array.data[0]
@@ -10576,6 +10576,10 @@ PrefabInstance:
     - target: {fileID: 3170193461307140405, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
       propertyPath: scenes.Array.data[1]
       value: Selection
+      objectReference: {fileID: 0}
+    - target: {fileID: 3170193461307140405, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
+      propertyPath: scenes.Array.data[2]
+      value: GamePlay
       objectReference: {fileID: 0}
     - target: {fileID: 5660192768289235058, guid: 80c530e981bbeea4abebc288cb011179, type: 3}
       propertyPath: m_LocalPosition.x

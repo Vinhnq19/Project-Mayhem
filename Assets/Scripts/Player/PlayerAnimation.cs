@@ -13,12 +13,12 @@ public class PlayerAnimation : MonoBehaviour
     private readonly string IS_LANDING = "IsLanding";
 
     private Animator anim;
-    private BasePlayer basePlayer; 
+    private BasePlayer basePlayer;
 
     [Header("Component References")]
-    [SerializeField] private SpriteRenderer visualSpriteRenderer; 
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
 
-    private Action<PlayerStateMachine> changeAnimationAction; 
+    private Action<PlayerStateMachine> changeAnimationAction;
 
     void Start()
     {
@@ -32,7 +32,16 @@ public class PlayerAnimation : MonoBehaviour
                 this.ChangeAnimation(stateMachine);
             }
         };
-        
+
+        if (basePlayer.PlayerID == 1)
+        {
+            visualSpriteRenderer.color = GameData.Instance.player1Color;
+        }
+        else
+        {
+            visualSpriteRenderer.color = GameData.Instance.player2Color;
+        }
+
         EventBus.On(GameEvent.PlayerChangeState, changeAnimationAction);
     }
 
@@ -54,6 +63,6 @@ public class PlayerAnimation : MonoBehaviour
             EventBus.Off(GameEvent.PlayerChangeState, changeAnimationAction);
         }
     }
-    
-   
+
+
 }
