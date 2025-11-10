@@ -5447,6 +5447,7 @@ Transform:
   - {fileID: 1105658244}
   - {fileID: 479964154}
   - {fileID: 1706203475}
+  - {fileID: 660934857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &345606689
@@ -13126,6 +13127,54 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &660934856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 660934857}
+  - component: {fileID: 660934858}
+  m_Layer: 0
+  m_Name: IndicatorManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &660934857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660934856}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 334742375}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &660934858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660934856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0d6394266254b4584ce1792b101be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorPrefab: {fileID: 8920495707955644265, guid: e8ae9a20e3d9df646afb480534c86fa1, type: 3}
+  canvasTransform: {fileID: 674269648}
+  player1: {fileID: 9133331864423647629}
+  player2: {fileID: 1444688982}
 --- !u!1 &674269644
 GameObject:
   m_ObjectHideFlags: 0
@@ -13194,7 +13243,7 @@ Canvas:
   m_GameObject: {fileID: 674269644}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 877983872}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -13542,7 +13591,7 @@ Transform:
   m_GameObject: {fileID: 877983870}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.1636515, y: 0.794569, z: -16641.234}
+  m_LocalPosition: {x: 5.163335, y: 0.794569, z: -16641.234}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
