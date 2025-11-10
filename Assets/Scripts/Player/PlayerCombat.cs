@@ -168,6 +168,8 @@ namespace ProjectMayhem.Player
         {
             if (weaponPrefab == null || weaponHolder == null) return;
 
+            SoundManager.Instance.PlaySfx(2);
+
             // If equipping starting weapon, use the dedicated method
             if (isStartingWeapon)
             {

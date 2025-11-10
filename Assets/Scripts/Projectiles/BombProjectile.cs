@@ -165,6 +165,8 @@ namespace ProjectMayhem.Projectiles
             // Play explosion VFX
             if (explosionEffectPrefab != null)
             {
+                SoundManager.Instance.PlaySfx(1);
+
                 // Tính vị trí spawn effect với offset (đẩy lên trên)
                 Vector3 effectPosition = transform.position + (Vector3)explosionEffectOffset;
                 
