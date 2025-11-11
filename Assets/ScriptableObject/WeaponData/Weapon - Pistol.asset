@@ -22,10 +22,6 @@ MonoBehaviour:
   reloadTime: 2
   infiniteAmmo: 0
   projectilePrefab: {fileID: 8229862190085078507, guid: 39ffb6c7f4d6125479a0b54fcbf75763, type: 3}
-  projectileSpeed: 15
+  projectileSpeed: 17
   projectilesPerShot: 1
-  spreadAngle: 0
-  throwForce: 15
-  throwAngle: 45
-  explosionRadius: 5
   impactEffectPrefab: {fileID: 0}

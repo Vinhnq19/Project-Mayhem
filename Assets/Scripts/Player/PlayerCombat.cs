@@ -127,9 +127,25 @@ namespace ProjectMayhem.Player
                     EventBus.Emit("Lose", this.playerID);
                     return;
                 }
+                
+                // Respawn player
                 transform.position = new Vector3(0f, 50f, 0f);
+                
+                // Reset combat state
+                ResetDamage();           // Reset damage percent về 0%
+                ResetBombCount();        // Reset bombs về max
+                
+                // Clear all effects
+                if (basePlayer != null && basePlayer.EffectManager != null)
+                {
+                    basePlayer.EffectManager.ClearAllEffects();
+                }
+                
+                // Reset weapon
                 EquipStartingWeapon();
                 CurrentWeapon.ForceReload();
+                
+                Debug.Log($"[PlayerCombat] Player {playerID} respawned - Reset damage, bombs, and effects");
             }
         }
 
