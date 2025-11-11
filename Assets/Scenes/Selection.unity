@@ -1077,8 +1077,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerLife: 3
-  player1Color: {r: 0, g: 0, b: 0, a: 0}
-  player2Color: {r: 0, g: 0, b: 0, a: 0}
+  player1Color: {r: 1, g: 1, b: 1, a: 1}
+  player2Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &533989724
 Transform:
   m_ObjectHideFlags: 0

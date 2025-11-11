@@ -134,6 +134,7 @@ namespace ProjectMayhem.Weapons
 
         protected virtual void ConsumeAmmo()
         {
+            SoundManager.Instance.PlaySfx(0);
             currentAmmo--;
             lastFireTime = Time.time;
         }
