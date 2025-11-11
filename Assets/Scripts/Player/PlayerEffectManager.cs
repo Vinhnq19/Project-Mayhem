@@ -201,5 +201,24 @@ namespace ProjectMayhem.Player
                 }
             }
         }
+
+        /// <summary>
+        /// Clear all active effects (used when respawn)
+        /// </summary>
+        public void ClearAllEffects()
+        {
+            // Remove all effects in reverse order
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
+            {
+                BaseEffect effect = activeEffects[i];
+                if (effect != null)
+                {
+                    effect.Remove(basePlayer);
+                }
+            }
+            
+            activeEffects.Clear();
+            Debug.Log("[PlayerEffectManager] Cleared all active effects");
+        }
     }
 }
