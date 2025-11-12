@@ -483,14 +483,18 @@ namespace ProjectMayhem.Player
             isGrounded = foundGround;
         }
 
+
+        public bool IsFacingRight = true;
         private void HandleFlip()
         {
             if (moveInput.x > 0f)
             {
+                IsFacingRight = true;
                 transform.eulerAngles = new Vector3(0f, 0f, 0f);
             }
             else if (moveInput.x < 0f)
             {
+                IsFacingRight = false;
                 transform.eulerAngles = new Vector3(0f, 180f, 0f);
             }
         }

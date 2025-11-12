@@ -12,6 +12,7 @@ public class PlayerAnimation : MonoBehaviour
     private readonly string IS_FALLING = "IsFalling";
     private readonly string IS_LANDING = "IsLanding";
 
+    [SerializeField] private GameObject name;
     private Animator anim;
     private BasePlayer basePlayer;
 
@@ -43,6 +44,22 @@ public class PlayerAnimation : MonoBehaviour
         }
 
         EventBus.On(GameEvent.PlayerChangeState, changeAnimationAction);
+    }
+
+    void Update()
+    {
+        Vector3 scale = name.transform.localScale;
+
+        if (basePlayer.IsFacingRight)
+        {
+            scale.x = Mathf.Abs(scale.x);
+        }
+        else
+        {
+            scale.x = -Mathf.Abs(scale.x); 
+        }
+
+        name.transform.localScale = scale;
     }
 
     private void ChangeAnimation(PlayerStateMachine stateMachine)

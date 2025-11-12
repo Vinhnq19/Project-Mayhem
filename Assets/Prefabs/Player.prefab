@@ -478,6 +478,7 @@ MonoBehaviour:
   playerCombat: {fileID: 4257615565187299057}
   playerEffectManager: {fileID: 1752643949145763827}
   playerStateMachine: {fileID: 5600755669479409891}
+  IsFacingRight: 1
 --- !u!114 &4257615565187299057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,6 +611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffe12ab2f317c3469282e4ad38caf96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: {fileID: 209260475895935159}
   visualSpriteRenderer: {fileID: 0}
 --- !u!1 &2405588534100844185
 GameObject:
